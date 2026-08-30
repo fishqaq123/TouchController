@@ -25,6 +25,7 @@ kt_merge_library(
         "//combine/core/screen",
         "//combine/core/widget/layout",
         "//combine/theme/base",
+        "//combine/theme/blackstone",
         "//combine/theme/vanilla",
         "//combine/widget",
         "@maven_fabric_26_2//:net_fabricmc_sponge_mixin",
