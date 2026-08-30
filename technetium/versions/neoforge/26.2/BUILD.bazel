@@ -19,8 +19,15 @@ kt_merge_library(
     ]),
     javac_opts = "//technetium:javac_opts_jvm_25",
     kotlinc_opts = "//technetium:kotlinc_opts_jvm_25",
+    # neoforge.mods.toml 必须通过 neoforge_mod_toml 打进 META-INF/,不能走普通 resources(会跑到根目录)。
     resource_strip_prefix = "technetium/versions/neoforge/26.2/src/main/resources",
-    resources = glob(["src/main/resources/**"]),
+    resources = glob(
+        ["src/main/resources/**"],
+        exclude = ["src/main/resources/neoforge.mods.toml"],
+    ),
+    resource_jars = [
+        ":neoforge_mod_toml",
+    ],
     deps = [
         "//:compose",
         "//technetium/common",
