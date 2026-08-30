@@ -1,0 +1,17 @@
+# Bazel 输出
+bazel-*
+/bazel-bin/
+/bazel-out/
+/bazel-testlogs/
+*.o
+*.class
+
+# Bazel module lock(dependency 派生)
+MODULE.bazel.lock
+
+# 本地分析用(不在仓库里)
+independences/
+github-token.txt
+
+# 一次性 Git Data API push 脚本
+push_via_api.py
