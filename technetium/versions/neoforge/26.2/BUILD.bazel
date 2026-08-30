@@ -41,6 +41,8 @@ kt_merge_library(
         "//game/26.2:game_client_neoforge",
 
         # NeoForge + Mixin(neoforge maven repo 别名 @neoforge_26_2)
+        # neoforge_deps 是合并的 NeoForge API 依赖(提供 net.neoforged.api.distmarker.Dist 等)
+        "@neoforge_26_2//:neoforge_deps",
         "@neoforge_26_2//:net_fabricmc_sponge_mixin",
         "@neoforge_26_2//:net_neoforged_bus",
         "@neoforge_26_2//:net_neoforged_fancymodloader_loader",
