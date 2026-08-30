@@ -10,8 +10,8 @@ kt_merge_library(
     srcs = glob([
         "src/main/kotlin/**/*.kt",
     ]),
-    javac_opts = "//combine:javac_opts_jvm_25",
-    kotlinc_opts = "//combine:kotlinc_opts_jvm_25",
+    javac_opts = "//technetium:javac_opts_jvm_25",
+    kotlinc_opts = "//technetium:kotlinc_opts_jvm_25",
     resource_strip_prefix = "technetium/versions/fabric/26.2/src/main/resources",
     resources = glob(["src/main/resources/**"]),
     deps = [
