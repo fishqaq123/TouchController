@@ -16,7 +16,6 @@ kt_merge_library(
     name = "neoforge_unmerged",
     srcs = glob([
         "src/main/kotlin/**/*.kt",
-        "src/main/kotlin/**/*.java",
     ]),
     javac_opts = "//combine:javac_opts_jvm_25",
     kotlinc_opts = "//combine:kotlinc_opts_jvm_25",
