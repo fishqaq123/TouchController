@@ -6,70 +6,78 @@
 package top.technetium.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import net.minecraft.client.Minecraft
 import top.fifthlight.combine.core.layout.Alignment
 import top.fifthlight.combine.core.layout.Arrangement
 import top.fifthlight.combine.core.modifier.Modifier
+import top.fifthlight.combine.core.modifier.drawing.border
 import top.fifthlight.combine.core.modifier.placement.fillMaxSize
 import top.fifthlight.combine.core.modifier.placement.fillMaxWidth
 import top.fifthlight.combine.core.modifier.placement.height
 import top.fifthlight.combine.core.modifier.placement.padding
 import top.fifthlight.combine.core.modifier.placement.width
+import top.fifthlight.combine.core.screen.LocalCloseHandler
 import top.fifthlight.combine.core.widget.layout.Box
 import top.fifthlight.combine.core.widget.layout.Column
-import top.fifthlight.combine.core.screen.LocalCloseHandler
+import top.fifthlight.combine.core.widget.layout.Row
 import top.fifthlight.combine.theme.invoke
 import top.fifthlight.combine.theme.vanilla.VanillaTheme
 import top.fifthlight.combine.widget.Button
 import top.fifthlight.combine.widget.Text
+import top.fifthlight.touchcontroller.common.ui.theme.LocalTouchControllerTheme
+import top.fifthlight.touchcontroller.common.ui.theme.TouchControllerTheme
 
 /**
- * 仿基岩版主菜单。
+ * 仿基岩版主菜单(TC 自带 blackstone 风格)。
  *
- * 说明:这是 MVP 阶段最简单的「大按钮菜单」—— 用 combine 的 VanillaTheme + Row/Column + Button
- * 堆出手机友好的、基岩风格的大按钮布局。
- * 后续可按需:换成 TouchControllerTheme(BLACKSTONE)、加背景纹理、加游戏设置子页面等。
+ * 布局(参照基岩版暂停菜单):
+ *  - 左列:返回 / 设置 / 返回标题 三个大按钮
+ *  - 右侧:在线玩家列表信息框(1 当前玩家 / 2 player / ...)
  *
- * 注意:combine 是 Compose 风格,按钮点击回调直接可写 onClick。
+ * 说明:combine 是 Compose 风格,按钮点击回调直接写 onClick。
+ *      玩家列表通过 Minecraft 客户端连接(multiplayer)读取真实在线玩家。
  */
 @Composable
 fun BedrockMenuScreen() {
-    VanillaTheme {
+    // TC 自带风格(blackstone 主题)。TouchControllerTheme 会提供 LocalTheme/LocalTouchControllerTheme。
+    TouchControllerTheme {
         val onClose = LocalCloseHandler.current
         Box(
             modifier = Modifier.fillMaxSize(),
             alignment = Alignment.Center,
         ) {
-            Column(
-                modifier = Modifier
-                    .width(220)
-                    .padding(top = 24),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8),
+            Row(
+                modifier = Modifier.width(300),
+                horizontalArrangement = Arrangement.spacedBy(12),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                // 标题
-                Text("Technetium", modifier = Modifier.padding(bottom = 16))
+                // —— 左侧按钮列 ——
+                Column(
+                    modifier = Modifier.weight(1f).fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8),
+                ) {
+                    MenuButton("返回") {
+                        onClose.close() // 关闭本菜单,回到游戏
+                    }
+                    MenuButton("设置") {
+                        // TODO: 打开游戏设置(原版 options),或后续做基岩风格设置页。
+                        onClose.close()
+                    }
+                    MenuButton("返回标题") {
+                        // TODO: 真正断开回标题。MVP 先占位,后面接原版回标题逻辑。
+                        onClose.close()
+                    }
+                }
 
-                // —— 基岩版风格大按钮 ——
-                MenuButton("继续游戏") {
-                    onClose.close()  // 关闭本菜单(回到游戏)
-                }
-                MenuButton("设置") {
-                    // TODO: 打开游戏设置(原版 options),或后续做基岩风格设置页。
-                    onClose.close()
-                }
-                MenuButton("世界", enabled = false) {
-                    // 占位:基岩版有 世界/服务器 大按钮。MVP 先禁用占位。
-                }
-                MenuButton("退出到主菜单") {
-                    // 这里应该真正断开回标题;MVP 先占位,后面接原版回标题逻辑。
-                    onClose.close()
-                }
+                // —— 右侧在线玩家列表 ——
+                PlayerListBox()
             }
         }
     }
 }
 
-/** 床岩风格大按钮封装。 */
+/** 基岩风格大按钮封装(用 TC blackstone 主题渲染)。 */
 @Composable
 private fun MenuButton(text: String, enabled: Boolean = true, onClick: () -> Unit) {
     Button(
@@ -78,5 +86,46 @@ private fun MenuButton(text: String, enabled: Boolean = true, onClick: () -> Uni
         modifier = Modifier.fillMaxWidth().height(24),
     ) {
         Text(text)
+    }
+}
+
+/** 右侧:在线玩家列表信息框。读取真实在线玩家(multiplayer 连接)。 */
+@Composable
+private fun PlayerListBox() {
+    // 读取一次当前在线玩家(避免每帧重读)。
+    val players = remember {
+        readOnlinePlayers()
+    }
+    Box(
+        modifier = Modifier
+            .weight(1f)
+            .fillMaxWidth()
+            .height(120)
+            .border(LocalTouchControllerTheme.current.borderBackgroundDark),
+    ) {
+        Column(
+            modifier = Modifier.padding(8),
+            verticalArrangement = Arrangement.spacedBy(4),
+        ) {
+            if (players.isEmpty()) {
+                Text("暂无在线玩家", modifier = Modifier.fillMaxWidth())
+            } else {
+                players.forEachIndexed { index, name ->
+                    Text("${index + 1} $name", modifier = Modifier.fillMaxWidth())
+                }
+            }
+        }
+    }
+}
+
+/** 从 Minecraft 客户端连接读取在线玩家名字列表(真实读取)。 */
+private fun readOnlinePlayers(): List<String> {
+    val player = Minecraft.getInstance().player ?: return emptyList()
+    // 单机/无连接时,至少显示本地玩家自己。
+    val connection = player.connection
+    return if (connection != null) {
+        connection.getOnlinePlayers().map { it.profile.name }
+    } else {
+        listOf(player.name.string)
     }
 }
