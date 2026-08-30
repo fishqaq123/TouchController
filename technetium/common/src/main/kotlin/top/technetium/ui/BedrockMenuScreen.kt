@@ -11,7 +11,6 @@ import net.minecraft.client.Minecraft
 import top.fifthlight.combine.core.layout.Alignment
 import top.fifthlight.combine.core.layout.Arrangement
 import top.fifthlight.combine.core.modifier.Modifier
-import top.fifthlight.combine.core.modifier.drawing.border
 import top.fifthlight.combine.core.modifier.placement.fillMaxSize
 import top.fifthlight.combine.core.modifier.placement.fillMaxWidth
 import top.fifthlight.combine.core.modifier.placement.height
@@ -21,27 +20,24 @@ import top.fifthlight.combine.core.screen.LocalCloseHandler
 import top.fifthlight.combine.core.widget.layout.Box
 import top.fifthlight.combine.core.widget.layout.Column
 import top.fifthlight.combine.core.widget.layout.Row
+import top.fifthlight.combine.theme.blackstone.BlackstoneTheme
 import top.fifthlight.combine.theme.invoke
-import top.fifthlight.combine.theme.vanilla.VanillaTheme
 import top.fifthlight.combine.widget.Button
 import top.fifthlight.combine.widget.Text
-import top.fifthlight.touchcontroller.common.ui.theme.LocalTouchControllerTheme
-import top.fifthlight.touchcontroller.common.ui.theme.TouchControllerTheme
 
 /**
- * 仿基岩版主菜单(TC 自带 blackstone 风格)。
+ * 仿基岩版主菜单(combine Blackstone 风格 = TC 视觉风格的基础)。
  *
  * 布局(参照基岩版暂停菜单):
  *  - 左列:返回 / 设置 / 返回标题 三个大按钮
  *  - 右侧:在线玩家列表信息框(1 当前玩家 / 2 player / ...)
  *
  * 说明:combine 是 Compose 风格,按钮点击回调直接写 onClick。
- *      玩家列表通过 Minecraft 客户端连接(multiplayer)读取真实在线玩家。
  */
 @Composable
 fun BedrockMenuScreen() {
-    // TC 自带风格(blackstone 主题)。TouchControllerTheme 会提供 LocalTheme/LocalTouchControllerTheme。
-    TouchControllerTheme {
+    // combine 公开的 Blackstone 主题(TC 视觉风格的基础)。TouchControllerTheme 内部类不可见,故用此。
+    BlackstoneTheme {
         val onClose = LocalCloseHandler.current
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -54,7 +50,7 @@ fun BedrockMenuScreen() {
             ) {
                 // —— 左侧按钮列 ——
                 Column(
-                    modifier = Modifier.weight(1f).fillMaxWidth(),
+                    modifier = Modifier.width(140),
                     verticalArrangement = Arrangement.spacedBy(8),
                 ) {
                     MenuButton("返回") {
@@ -77,7 +73,7 @@ fun BedrockMenuScreen() {
     }
 }
 
-/** 基岩风格大按钮封装(用 TC blackstone 主题渲染)。 */
+/** 基岩风格大按钮封装。 */
 @Composable
 private fun MenuButton(text: String, enabled: Boolean = true, onClick: () -> Unit) {
     Button(
@@ -92,16 +88,14 @@ private fun MenuButton(text: String, enabled: Boolean = true, onClick: () -> Uni
 /** 右侧:在线玩家列表信息框。读取真实在线玩家(multiplayer 连接)。 */
 @Composable
 private fun PlayerListBox() {
-    // 读取一次当前在线玩家(避免每帧重读)。
     val players = remember {
         readOnlinePlayers()
     }
     Box(
         modifier = Modifier
-            .weight(1f)
-            .fillMaxWidth()
+            .width(140)
             .height(120)
-            .border(LocalTouchControllerTheme.current.borderBackgroundDark),
+            .padding(4),
     ) {
         Column(
             modifier = Modifier.padding(8),
@@ -121,7 +115,6 @@ private fun PlayerListBox() {
 /** 从 Minecraft 客户端连接读取在线玩家名字列表(真实读取)。 */
 private fun readOnlinePlayers(): List<String> {
     val player = Minecraft.getInstance().player ?: return emptyList()
-    // 单机/无连接时,至少显示本地玩家自己。
     val connection = player.connection
     return if (connection != null) {
         connection.getOnlinePlayers().map { it.profile.name }
