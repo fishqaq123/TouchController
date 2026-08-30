@@ -29,7 +29,7 @@ kt_merge_library(
         "//combine/widget",
         "//game/26.2:game_client_libraries",
         "@maven_fabric_26_2//:net_fabricmc_fabric_api_fabric_api",
-        "@maven_fabric_26_2//:net_fabricmc_fabric_lifecycle_events_v1",
+        "@maven_fabric_26_2//:net_fabricmc_fabric_api_fabric_lifecycle_events_v1",
         "@maven_fabric_26_2//:net_fabricmc_fabric_loader",
         "@maven_fabric_26_2//:net_fabricmc_sponge_mixin",
     ],
