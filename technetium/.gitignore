@@ -15,3 +15,10 @@ github-token.txt
 
 # 一次性 Git Data API push 脚本
 push_via_api.py
+
+# 一次性辅助脚本/日志
+push_via_api.py
+push_submodule.py
+base_tree.json
+clone_log.txt
+fetch_log.txt

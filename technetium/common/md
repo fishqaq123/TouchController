@@ -8,11 +8,11 @@
 
 ## 阶段性路线(A → 过渡 NeoForge)
 
-1. **现在(Fabric 26.2 验证)**:先用 combine 官方 hello_world(Fabric)模板跑通
+1. **Fabric 26.2 验证**:先用 combine 官方 hello_world(Fabric)模板跑通
    「仿基岩菜单 + Mixin 重定向」核心逻辑。
-2. **过渡(NeoForge 26.2)**:功能验证通过后,补 `versions/neoforge/26.2/` 的入口类
-   + `neoforge.mods.toml` + `neoforge.mixins.json` + BUILD,复用 `common/` 的 UI 与 Mixin,
-   只改 loader 壳。已按此(common + versions 分层)组织,过渡成本低。
+2. **NeoForge 26.2(代码已写,待编译验证)**:`versions/neoforge/26.2/` 的入口类
+   + `neoforge.mods.toml` + `neoforge.mixins.neoforge.json` + BUILD 已补,复用 `common/`
+   的 UI 与 Mixin,只改 loader 壳。
 3. 后续:容器关闭键、聊天命令补全(依赖 combine/TC 输入层)。
 
 ## 目录结构与职责
