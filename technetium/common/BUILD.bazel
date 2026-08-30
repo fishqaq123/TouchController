@@ -16,6 +16,8 @@ kt_merge_library(
     # 仿基岩菜单用 combine(public);Mixin 需要 mixin 框架。
     deps = [
         "//:compose",
+        # Minecraft 编译期类(带 access widener)。Technetium 当前固定 26.2。
+        "//combine/backend/minecraft/game/26.2",
         "//combine/core/data",
         "//combine/core/layout",
         "//combine/core/modifier",
