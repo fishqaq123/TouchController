@@ -6,8 +6,6 @@
 package top.technetium.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import net.minecraft.client.Minecraft
 import top.fifthlight.combine.core.layout.Alignment
 import top.fifthlight.combine.core.layout.Arrangement
 import top.fifthlight.combine.core.modifier.Modifier
@@ -30,9 +28,10 @@ import top.fifthlight.combine.widget.Text
  *
  * 布局(参照基岩版暂停菜单):
  *  - 左列:返回 / 设置 / 返回标题 三个大按钮
- *  - 右侧:在线玩家列表信息框(1 当前玩家 / 2 player / ...)
+ *  - 右侧:在线玩家列表信息框(1 当前玩家 / 2 Player / ...)
  *
  * 说明:combine 是 Compose 风格,按钮点击回调直接写 onClick。
+ *      玩家列表当前为占位文本(真实在线玩家读取需额外 authlib/brigadier 编译依赖,后续再加)。
  */
 @Composable
 fun BedrockMenuScreen() {
@@ -85,40 +84,21 @@ private fun MenuButton(text: String, enabled: Boolean = true, onClick: () -> Uni
     }
 }
 
-/** 右侧:在线玩家列表信息框。读取真实在线玩家(multiplayer 连接)。 */
+/** 右侧:在线玩家列表信息框。(当前为占位文本,真读玩家后续实现。) */
 @Composable
 private fun PlayerListBox() {
-    val players = remember {
-        readOnlinePlayers()
-    }
+    // 占位:列表内容(真实玩家读取需 authlib/brigadier 编译依赖,单独迭代)。
+    val players = listOf("当前玩家", "Player")
     Box(
-        modifier = Modifier
-            .width(140)
-            .height(120)
-            .padding(4),
+        modifier = Modifier.width(140).height(120).padding(4),
     ) {
         Column(
             modifier = Modifier.padding(8),
             verticalArrangement = Arrangement.spacedBy(4),
         ) {
-            if (players.isEmpty()) {
-                Text("暂无在线玩家", modifier = Modifier.fillMaxWidth())
-            } else {
-                players.forEachIndexed { index, name ->
-                    Text("${index + 1} $name", modifier = Modifier.fillMaxWidth())
-                }
+            players.forEachIndexed { index, name ->
+                Text("${index + 1} $name", modifier = Modifier.fillMaxWidth())
             }
         }
-    }
-}
-
-/** 从 Minecraft 客户端连接读取在线玩家名字列表(真实读取)。 */
-private fun readOnlinePlayers(): List<String> {
-    val player = Minecraft.getInstance().player ?: return emptyList()
-    val connection = player.connection
-    return if (connection != null) {
-        connection.getOnlinePlayers().map { it.profile.name }
-    } else {
-        listOf(player.name.string)
     }
 }
