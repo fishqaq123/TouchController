@@ -29,8 +29,12 @@ import top.technetium.ui.BedrockMenu;
  *       Kotlin object 可能被编译成 INSTANCE 单例;若 @Inject 到普通方法不生效,
  *       可改用 @Mixin(interface GameAction) 的 @Redirect openGameMenu,或用 @Overwrite。
  *       以下先用 @Inject(HEAD, cancellable)+手动打开仿基岩菜单 + 取消原实现。
+ *
+ * 用字符串形式 @Mixin("...") 而非 @Mixin(GameActionImpl.class):
+ * - GameActionImpl 是 TC 内部类,不在 technetium 编译期类路径上;
+ * - 字符串形式延迟到 mixin 应用到目标类时才解析,无需编译期可见。
  */
-@Mixin(GameActionImpl.class)
+@Mixin("top.fifthlight.touchcontroller.gal.action.v26_2.GameActionImpl")
 public abstract class BuiltinWidgetsPauseRedirectMixin {
     @Inject(method = "openGameMenu", at = @At("HEAD"), cancellable = true)
     private void technetium$onPauseButton(CallbackInfo ci) {
