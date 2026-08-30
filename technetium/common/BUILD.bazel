@@ -1,19 +1,21 @@
 # Technetium 公共层(跨 loader 复用的 UI + Mixin)。
-# 结构参考:combine/example/hello_world(common + versions 分层)。
+# 结构参考:combine/example/hello_world/common/BUILD.bazel。
+# 必须用 kt_merge_library(而非 kt_jvm_library)以提供 MergeLibraryInfo,
+# 供下游 merge_library_jar 合并。
 
-load("@rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+load("//rule:merge_library.bzl", "kt_merge_library")
 
-kt_jvm_library(
+kt_merge_library(
     name = "common",
     srcs = glob([
         "src/main/kotlin/**/*.kt",
         "src/main/kotlin/**/*.java",
     ]),
-    # 仿基岩菜单用 combine(public);Mixin 需要 mixin 框架(maven)。
+    javac_opts = "//technetium:javac_opts_jvm_25",
+    kotlinc_opts = "//technetium:kotlinc_opts_jvm_25",
+    # 仿基岩菜单用 combine(public);Mixin 需要 mixin 框架。
     deps = [
-        "//combine:combine",
-
-        # combine 的 ScreenFactory 桥接 + Text 等公共 API 依赖:
+        "//:compose",
         "//combine/core/data",
         "//combine/core/layout",
         "//combine/core/modifier",
@@ -23,13 +25,11 @@ kt_jvm_library(
         "//combine/theme/base",
         "//combine/theme/vanilla",
         "//combine/widget",
-
-        # Mixin 框架(fabric 侧注入由下游 maven repo 提供)
         "@maven_fabric_26_2//:net_fabricmc_sponge_mixin",
     ],
 
     # Mixin 目标 touchcontroller 内部类的编译期类路径比较特殊:
     # GameActionImpl 位于 touchcontroller 内部(非 public visibility)。
-    # 阶段 1 先盲写,若编译报 visibility/找不到类,再由 CI 报错驱动修正。
+    # 若编译报 visibility/找不到类,再由 CI 报错驱动修正。
     visibility = ["//technetium:__subpackages__"],
 )
