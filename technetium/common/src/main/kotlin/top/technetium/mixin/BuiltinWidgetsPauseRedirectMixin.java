@@ -30,18 +30,19 @@ import top.technetium.ui.BedrockMenu;
  *       可改用 @Mixin(interface GameAction) 的 @Redirect openGameMenu,或用 @Overwrite。
  *       以下先用 @Inject(HEAD, cancellable)+手动打开仿基岩菜单 + 取消原实现。
  *
- * 用字符串形式 @Mixin("...") 而非 @Mixin(GameActionImpl.class):
+ * 用 @Mixin 的 targets 字符串属性(而非 value=Class):
  * - GameActionImpl 是 TC 内部类,不在 technetium 编译期类路径上;
- * - 字符串形式延迟到 mixin 应用到目标类时才解析,无需编译期可见。
+ * - targets 字符串形式延迟到 mixin 应用到目标类时才解析,无需编译期可见;
+ * - 注意 @Mixin 的 value 是 Class<?>(不可用字符串),targets 才是字符串数组。
  */
-@Mixin("top.fifthlight.touchcontroller.gal.action.v26_2.GameActionImpl")
+@Mixin(targets = "top.fifthlight.touchcontroller.gal.action.v26_2.GameActionImpl")
 public abstract class BuiltinWidgetsPauseRedirectMixin {
     @Inject(method = "openGameMenu", at = @At("HEAD"), cancellable = true)
     private void technetium$onPauseButton(CallbackInfo ci) {
         Minecraft client = Minecraft.getInstance();
         // 打开我们的仿基岩主菜单(combine 渲染)。
-        // 用一个布尔开关防止递归:mixin 目标不是 openGameMenu 自身,不会递归。
-        BedrockMenu.openFor(client);
+        // Kotlin object 的方法在 Java 里通过 INSTANCE 访问(非 static)。
+        BedrockMenu.INSTANCE.openFor(client);
         ci.cancel(); // 阻止原版 pauseGame(false) —— 这样按钮不再进原版暂停菜单
     }
 }
