@@ -1,0 +1,23 @@
+# Technetium 子模组根 BUILD。
+# 定义本子模组共享的 JVM opts(因为 combine/touchcontroller 的 opts 对 technetium/ 不可见,
+# 需在 technetium/ 内自建,供 fabric/neoforge 层引用)。
+
+load("//rule:jvm_opts.bzl", "kt_jvm_javac_options_set", "kt_jvm_kotlinc_options_set")
+
+# 对应 MC 26.2,Java 25 工具链(参考 TC/combine)。
+jvm_versions = [
+    25,
+]
+
+kt_jvm_kotlinc_options_set(
+    name = "kotlinc_opts",
+    versions = jvm_versions,
+    visibility = ["//technetium:__subpackages__"],
+    x_lambdas = "indy",
+)
+
+kt_jvm_javac_options_set(
+    name = "javac_opts",
+    versions = jvm_versions,
+    visibility = ["//technetium:__subpackages__"],
+)
