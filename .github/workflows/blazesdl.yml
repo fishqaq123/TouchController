@@ -1,5 +1,9 @@
 name: Build BlazeSDL
-on: [ pull_request, push ]
+on:
+  pull_request:
+    paths: ['blazesdl/**']
+  push:
+    paths: ['blazesdl/**']
 
 jobs:
   build:
