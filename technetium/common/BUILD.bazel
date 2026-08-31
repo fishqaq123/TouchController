@@ -3,16 +3,7 @@
 # 必须用 kt_merge_library(而非 kt_jvm_library)以提供 MergeLibraryInfo,
 # 供下游 merge_library_jar 合并。
 
-load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 load("//rule:merge_library.bzl", "kt_merge_library")
-
-# 模组图标(锝元素图),落到 jar 的 assets/technetium/textures/icon.png。
-# 供 fabric.mod.json 的 "icon" 与 neoforge.mods.toml 的 logoFile 引用。
-copy_file(
-    name = "icon",
-    src = "src/main/resources/assets/technetium/textures/icon.png",
-    out = "assets/technetium/textures/icon.png",
-)
 
 kt_merge_library(
     name = "common",
@@ -22,9 +13,6 @@ kt_merge_library(
     ]),
     javac_opts = "//technetium:javac_opts_jvm_25",
     kotlinc_opts = "//technetium:kotlinc_opts_jvm_25",
-    resources = {
-        ":icon": "technetium/common",
-    },
     # 仿基岩菜单用 combine(public);Mixin 需要 mixin 框架。
     deps = [
         "//:compose",
