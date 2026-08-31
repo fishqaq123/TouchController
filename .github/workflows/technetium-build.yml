@@ -1,5 +1,9 @@
 name: Build Technetium
-on: [pull_request, push]
+on:
+  pull_request:
+    paths: ['technetium/**', '.github/workflows/technetium-build.yml']
+  push:
+    paths: ['technetium/**', '.github/workflows/technetium-build.yml']
 
 jobs:
   build:
