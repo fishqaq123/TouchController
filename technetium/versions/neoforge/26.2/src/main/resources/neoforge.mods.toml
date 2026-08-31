@@ -7,6 +7,7 @@ version = "0.0.1"
 displayName = "Technetium"
 description = "安卓触摸体验优化模组:基于 TouchController,仿基岩版主菜单等。"
 authors = "fishqaq123"
+logoFile = "assets/technetium/textures/icon.png"
 
 [[mixins]]
 config = "technetium.mixins.neoforge.json"
