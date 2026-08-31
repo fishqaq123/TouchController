@@ -1,5 +1,9 @@
 name: Build ArmorStand and BlazeRod
-on: [ pull_request, push ]
+on:
+  pull_request:
+    paths: ['armorstand/**', 'blazerod/**']
+  push:
+    paths: ['armorstand/**', 'blazerod/**']
 
 jobs:
   build:
