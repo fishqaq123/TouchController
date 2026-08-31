@@ -1,5 +1,9 @@
 name: Build IntelliJ plugins
-on: [ pull_request, push ]
+on:
+  pull_request:
+    paths: ['intellij_plugin/**']
+  push:
+    paths: ['intellij_plugin/**']
 
 jobs:
   build:
