@@ -23,7 +23,7 @@ kt_merge_library(
     javac_opts = "//technetium:javac_opts_jvm_25",
     kotlinc_opts = "//technetium:kotlinc_opts_jvm_25",
     resources = {
-        ":icon": "",
+        ":icon": "technetium/common",
     },
     # 仿基岩菜单用 combine(public);Mixin 需要 mixin 框架。
     deps = [
