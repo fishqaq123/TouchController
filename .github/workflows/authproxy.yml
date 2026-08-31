@@ -1,5 +1,9 @@
 name: Build AuthProxy
-on: [ pull_request, push ]
+on:
+  pull_request:
+    paths: ['authproxy/**']
+  push:
+    paths: ['authproxy/**']
 
 jobs:
   build:
