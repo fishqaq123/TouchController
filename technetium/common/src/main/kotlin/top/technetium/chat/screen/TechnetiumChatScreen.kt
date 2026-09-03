@@ -8,7 +8,6 @@ package top.technetium.chat.screen
 import androidx.compose.runtime.*
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.client.multiplayer.chat.GuiMessage
 import top.fifthlight.combine.core.data.Text
 import top.fifthlight.combine.core.input.interaction.MutableInteractionSource
 import top.fifthlight.combine.core.layout.Alignment
@@ -83,11 +82,11 @@ fun TechnetiumChatScreen() {
             }
 
             // 消息列表区域
-            var messages by remember { mutableStateOf(emptyList<GuiMessage>()) }
+            var messages by remember { mutableStateOf(emptyList<String>()) }
             LaunchedEffect(Unit) {
                 while (true) {
                     withFrameMillis { _ ->
-                        messages = ChatMessagesBridge.getMessages().reversed()
+                        messages = ChatMessagesBridge.getMessageTexts().reversed()
                     }
                 }
             }
@@ -102,7 +101,7 @@ fun TechnetiumChatScreen() {
             ) {
                 for (message in messages) {
                     Text(
-                        text = message.content().string,
+                        text = message,
                         color = uiState.textColor,
                     )
                 }
