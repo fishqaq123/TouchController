@@ -16,12 +16,13 @@ kt_merge_library(
     # 仿基岩菜单用 combine(public);Mixin 需要 mixin 框架。
     deps = [
         "//:compose",
-        # Minecraft 编译期类(带 access widener)。Technetium 当前固定 26.2。
-        "//combine/backend/minecraft/game/26.2",
+        # 合并后的 MC jar(含 Brigadier、commons-lang3 等所有 MC 依赖)
+        "//combine/backend/minecraft/versions/26.2:26.2_merged",
         "//combine/core/data",
         "//combine/core/layout",
         "//combine/core/modifier",
         "//combine/core/modifier/placement",
+        "//combine/core/modifier/scroll",
         "//combine/core/screen",
         "//combine/core/util/dispatcher",
         "//combine/core/widget/layout",
@@ -29,6 +30,8 @@ kt_merge_library(
         "//combine/theme/blackstone",
         "//combine/theme/vanilla",
         "//combine/widget",
+
+        # Mixin 框架(fabric 侧注入由下游 maven repo 提供)
         "@maven_fabric_26_2//:net_fabricmc_sponge_mixin",
     ],
 
