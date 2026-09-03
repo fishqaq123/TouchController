@@ -16,8 +16,8 @@ kt_merge_library(
     # 仿基岩菜单用 combine(public);Mixin 需要 mixin 框架。
     deps = [
         "//:compose",
-        # 合并后的 MC jar(含 Brigadier、commons-lang3 等所有 MC 依赖)
-        "//combine/backend/minecraft/versions/26.2:26.2_merged",
+        # Minecraft 编译期类(含 Brigadier 等 MC 内置依赖)
+        "//combine/backend/minecraft/game/26.2",
         "//combine/core/data",
         "//combine/core/layout",
         "//combine/core/modifier",
@@ -30,6 +30,9 @@ kt_merge_library(
         "//combine/theme/blackstone",
         "//combine/theme/vanilla",
         "//combine/widget",
+
+        # Apache Commons Lang3(消息处理)
+        "@maven//:org_apache_commons_commons_lang3",
 
         # Mixin 框架(fabric 侧注入由下游 maven repo 提供)
         "@maven_fabric_26_2//:net_fabricmc_sponge_mixin",
