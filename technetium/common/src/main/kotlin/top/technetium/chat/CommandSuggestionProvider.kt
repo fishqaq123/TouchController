@@ -5,19 +5,14 @@
 
 package top.technetium.chat
 
-import com.mojang.brigadier.ParseResults
-import com.mojang.brigadier.suggestion.Suggestion
-import com.mojang.brigadier.suggestion.Suggestions
 import net.minecraft.client.Minecraft
-import net.minecraft.client.multiplayer.ClientPacketListener
 import net.minecraft.client.multiplayer.ClientSuggestionProvider
-import java.util.concurrent.CompletableFuture
 
 /**
- * 命令补全提供者 - 封装 MC 原版 Brigadier 命令补全 API。
+ * 命令补全提供者 - 通过反射调用 MC 原版 Brigadier 命令补全 API。
  *
- * 通过 ClientPacketListener 获取命令调度器，使用 ClientSuggestionProvider 提供上下文，
- * 返回当前输入对应的命令建议列表。
+ * 由于 Brigadier 库不在 Technetium 的编译类路径中（TC 不提供 brigadier 的 maven 依赖），
+ * 这里使用反射避免直接引用 com.mojang.brigadier.* 类型。
  */
 object CommandSuggestionProvider {
 
@@ -29,23 +24,7 @@ object CommandSuggestionProvider {
      */
     fun getSuggestions(input: String): List<String> {
         if (input.isEmpty()) return emptyList()
-        
-        val client = Minecraft.getInstance()
-        val connection = client.connection ?: return emptyList()
-        
-        // 创建 ClientSuggestionProvider 作为命令上下文
-        val source = ClientSuggestionProvider(connection, client)
-        
-        // 获取命令调度器并解析输入
-        val dispatcher = connection.commands
-        val parse: ParseResults<ClientSuggestionProvider> = dispatcher.parse(input, source)
-        
-        // 获取建议（Brigadier 返回 CompletableFuture，使用 join 阻塞等待）
-        val suggestionsFuture: CompletableFuture<Suggestions> = dispatcher.getCompletionSuggestions(parse)
-        val suggestions: Suggestions = suggestionsFuture.join()
-        
-        // 提取建议文本
-        return suggestions.list.map { it.text }
+        return getSuggestionEntries(input).map { it.text }
     }
 
     /**
@@ -58,22 +37,47 @@ object CommandSuggestionProvider {
         val client = Minecraft.getInstance()
         val connection = client.connection ?: return emptyList()
         
-        val source = ClientSuggestionProvider(connection, client)
-        val dispatcher = connection.commands
-        val parse = dispatcher.parse(input, source)
+        // 创建 ClientSuggestionProvider 作为命令上下文
+        // MC 26.2 需要三个参数
+        val source = ClientSuggestionProvider(connection, client, 2)
         
-        val suggestionsFuture = dispatcher.getCompletionSuggestions(parse)
-        val suggestions = suggestionsFuture.join()
-        
-        val rangeStart = suggestions.range.start
-        val rangeEnd = suggestions.range.end
-        
-        return suggestions.list.map { suggestion ->
-            SuggestionEntry(
-                text = suggestion.text,
-                rangeStart = rangeStart,
-                rangeEnd = rangeEnd,
-            )
+        try {
+            // 获取 dispatcher（通过反射，避免编译期依赖 Brigadier 类型）
+            val commandsField = connection.javaClass.getMethod("getCommands")
+            val dispatcher = commandsField.invoke(connection)
+            
+            // 通过反射调用 parse
+            val dispatcherClass = dispatcher.javaClass
+            val parseMethod = dispatcherClass.getMethod("parse", String::class.java, source.javaClass)
+            val parse = parseMethod.invoke(dispatcher, input, source)
+            
+            // 通过反射调用 getCompletionSuggestions
+            val suggestionsMethod = dispatcherClass.getMethod("getCompletionSuggestions", parse.javaClass)
+            val suggestionsFuture = suggestionsMethod.invoke(dispatcher, parse) as java.util.concurrent.CompletableFuture<*>
+            val suggestions = suggestionsFuture.join()
+            
+            // 通过反射获取 suggestions.range（用于替换范围）
+            val rangeMethod = suggestions.javaClass.getMethod("getRange")
+            val range = rangeMethod.invoke(suggestions)
+            val rangeStart = range.javaClass.getMethod("getStart").invoke(range) as Int
+            val rangeEnd = range.javaClass.getMethod("getEnd").invoke(range) as Int
+            
+            // 通过反射获取 suggestions.list（建议列表）
+            val listMethod = suggestions.javaClass.getMethod("getList")
+            val list = listMethod.invoke(suggestions) as List<*>
+            
+            // 提取建议文本
+            return list.map { obj ->
+                val textMethod = obj.javaClass.getMethod("getText")
+                val text = textMethod.invoke(obj) as String
+                SuggestionEntry(
+                    text = text,
+                    rangeStart = rangeStart,
+                    rangeEnd = rangeEnd,
+                )
+            }
+        } catch (e: Exception) {
+            return emptyList()
         }
     }
 
