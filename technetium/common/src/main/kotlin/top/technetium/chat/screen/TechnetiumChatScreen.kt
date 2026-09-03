@@ -7,6 +7,7 @@ package top.technetium.chat.screen
 
 import androidx.compose.runtime.*
 import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.multiplayer.chat.GuiMessage
 import top.fifthlight.combine.core.data.Text
 import top.fifthlight.combine.core.input.interaction.MutableInteractionSource
@@ -33,8 +34,8 @@ import top.fifthlight.combine.theme.vanilla.VanillaTheme
 import top.fifthlight.combine.widget.Button
 import top.fifthlight.combine.widget.EditText
 import top.fifthlight.combine.widget.Text
+import top.technetium.chat.ChatMessagesBridge
 import top.technetium.chat.model.TechnetiumChatScreenModel
-import top.technetium.mixin.ChatComponentWithMessages
 
 /**
  * Technetium 聊天界面。
@@ -82,15 +83,11 @@ fun TechnetiumChatScreen() {
             }
 
             // 消息列表区域
-            val client = Minecraft.getInstance()
             var messages by remember { mutableStateOf(emptyList<GuiMessage>()) }
             LaunchedEffect(Unit) {
                 while (true) {
                     withFrameMillis { _ ->
-                        val chatComponent = client.gui.hud.chat
-                        if (chatComponent is ChatComponentWithMessages) {
-                            messages = chatComponent.technetium$getMessages().reversed()
-                        }
+                        messages = ChatMessagesBridge.getMessages().reversed()
                     }
                 }
             }
@@ -212,7 +209,7 @@ object TechnetiumChatScreen {
             title = Text.literal("聊天与命令"),
         ) {
             TechnetiumChatScreen()
-        }
+        } as Screen
         client.gui.setScreen(screen)
     }
 }
