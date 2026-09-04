@@ -37,12 +37,35 @@ object CommandSuggestionProvider {
         val client = Minecraft.getInstance()
         val connection = client.connection ?: return emptyList()
         
-        // 创建 ClientSuggestionProvider 作为命令上下文
-        // MC 26.2 需要三个参数
-        val source = ClientSuggestionProvider(connection, client, 2)
-        
         try {
-            // 获取 dispatcher（通过反射，避免编译期依赖 Brigadier 类型）
+            // 通过反射创建 PermissionSet（避免编译期依赖）
+            // MC 26.2 中 ClientSuggestionProvider 构造函数需要 PermissionSet
+            val permissionSetClass = Class.forName("net.minecraft.commands.PermissionSet")
+            // 尝试 PermissionSet.all() 或 PermissionSet.NONE 等静态工厂
+            val permissionSet = try {
+                permissionSetClass.getMethod("all").invoke(null)
+            } catch (e: NoSuchMethodException) {
+                try {
+                    permissionSetClass.getMethod("none").invoke(null)
+                } catch (e2: NoSuchMethodException) {
+                    // 尝试静态字段 NONE / ALL
+                    try {
+                        permissionSetClass.getField("NONE").get(null)
+                    } catch (e3: NoSuchFieldException) {
+                        permissionSetClass.getField("ALL").get(null)
+                    }
+                }
+            }
+            
+            // 创建 ClientSuggestionProvider（反射，3 个参数）
+            val clientSuggestionProviderClass = Class.forName("net.minecraft.client.multiplayer.ClientSuggestionProvider")
+            val source = clientSuggestionProviderClass.getConstructor(
+                connection.javaClass,
+                Minecraft::class.java,
+                permissionSetClass,
+            ).newInstance(connection, client, permissionSet)
+            
+            // 获取 dispatcher（通过反射）
             val commandsField = connection.javaClass.getMethod("getCommands")
             val dispatcher = commandsField.invoke(connection)
             
@@ -67,14 +90,22 @@ object CommandSuggestionProvider {
             val list = listMethod.invoke(suggestions) as List<*>
             
             // 提取建议文本
-            return list.map { obj ->
-                val textMethod = obj.javaClass.getMethod("getText")
-                val text = textMethod.invoke(obj) as String
-                SuggestionEntry(
-                    text = text,
-                    rangeStart = rangeStart,
-                    rangeEnd = rangeEnd,
-                )
+            return list.mapNotNull { obj ->
+                if (obj != null) {
+                    val textMethod = obj.javaClass.getMethod("getText")
+                    val text = textMethod.invoke(obj) as? String
+                    if (text != null) {
+                        SuggestionEntry(
+                            text = text,
+                            rangeStart = rangeStart,
+                            rangeEnd = rangeEnd,
+                        )
+                    } else {
+                        null
+                    }
+                } else {
+                    null
+                }
             }
         } catch (e: Exception) {
             return emptyList()
