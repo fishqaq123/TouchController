@@ -18,14 +18,20 @@ kt_merge_library(
         "//:compose",
         # Minecraft 编译期类(含 Brigadier 等 MC 内置依赖)
         "//combine/backend/minecraft/game/26.2",
+        # combine 核心 API
         "//combine/core/data",
+        "//combine/core/input/interaction",
         "//combine/core/layout",
         "//combine/core/modifier",
+        "//combine/core/modifier/drawing",
+        "//combine/core/modifier/focus",
         "//combine/core/modifier/placement",
         "//combine/core/modifier/scroll",
+        "//combine/core/paint",
         "//combine/core/screen",
         "//combine/core/util/dispatcher",
         "//combine/core/widget/layout",
+        # combine 主题
         "//combine/theme/base",
         "//combine/theme/blackstone",
         "//combine/theme/vanilla",
@@ -33,6 +39,8 @@ kt_merge_library(
 
         # Apache Commons Lang3(消息处理)
         "@maven//:org_apache_commons_commons_lang3",
+        # Kotlin Coroutines(协程支持)
+        "@maven//:org_jetbrains_kotlinx_kotlinx_coroutines_core_jvm",
 
         # Mixin 框架(fabric 侧注入由下游 maven repo 提供)
         "@maven_fabric_26_2//:net_fabricmc_sponge_mixin",
