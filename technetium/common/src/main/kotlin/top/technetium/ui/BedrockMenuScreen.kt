@@ -6,6 +6,7 @@
 package top.technetium.ui
 
 import androidx.compose.runtime.Composable
+import net.minecraft.client.Minecraft
 import top.fifthlight.combine.core.layout.Alignment
 import top.fifthlight.combine.core.layout.Arrangement
 import top.fifthlight.combine.core.modifier.Modifier
@@ -60,8 +61,9 @@ fun BedrockMenuScreen() {
                         onClose.close()
                     }
                     MenuButton("返回标题") {
-                        // TODO: 真正断开回标题。MVP 先占位,后面接原版回标题逻辑。
+                        // 保存并退出到标题(ClientLevel.disconnect() 保存当前世界并断开返回主菜单)。
                         onClose.close()
+                        Minecraft.getInstance().level?.disconnect()
                     }
                 }
 
