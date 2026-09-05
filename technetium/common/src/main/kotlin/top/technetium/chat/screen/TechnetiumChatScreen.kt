@@ -134,7 +134,7 @@ fun TechnetiumChatScreen() {
                 }
             }
 
-            // 底部输入栏（模仿原版布局：键盘、设置、输入框、Tab、发送）
+            // 底部输入栏
             val bottomBarHeight = 40
             val focusRequester = remember { FocusRequester() }
             val interactionSource = remember { MutableInteractionSource() }
@@ -158,7 +158,7 @@ fun TechnetiumChatScreen() {
                     .fillMaxWidth()
                     .height(bottomBarHeight),
             ) {
-                // 键盘按钮（放大）
+                // 键盘按钮（文字标签替代图标）
                 Button(
                     onClick = {
                         if (focused) {
@@ -171,10 +171,10 @@ fun TechnetiumChatScreen() {
                         .width(40)
                         .fillMaxHeight(),
                 ) {
-                    Text("⌨")
+                    Text("键盘")
                 }
 
-                // 设置按钮（放大）
+                // 设置按钮（文字标签替代图标）
                 Button(
                     onClick = {
                         screenModel.openSettingsDialog()
@@ -183,7 +183,7 @@ fun TechnetiumChatScreen() {
                         .width(40)
                         .fillMaxHeight(),
                 ) {
-                    Text("⚙")
+                    Text("设置")
                 }
 
                 // 输入框
@@ -198,7 +198,7 @@ fun TechnetiumChatScreen() {
                     onEnter = screenModel::sendText,
                 )
 
-                // Tab 虚拟按键 - 用于命令补全
+                // Tab 虚拟按键
                 Button(
                     onClick = {
                         screenModel.applySelectedSuggestion()
