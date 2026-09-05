@@ -54,7 +54,7 @@ kt_merge_library(
         "@neoforge_26_2//:net_fabricmc_sponge_mixin",
         "@neoforge_26_2//:net_neoforged_bus",
         "@neoforge_26_2//:net_neoforged_fancymodloader_loader",
-        "@neoforge_26_2//:net_neoforged_neoforge",
+        "@neoforge_26_2//:neoforge",
     ],
 )
 
