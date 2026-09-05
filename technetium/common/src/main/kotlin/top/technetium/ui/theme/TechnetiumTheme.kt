@@ -39,7 +39,7 @@ data class TechnetiumTheme(
 
 @Composable
 inline operator fun TechnetiumTheme.invoke(crossinline block: @Composable TechnetiumTheme.() -> Unit) {
-    val inputHandler = InputHandler.Factory.ofDefault() ?: InputHandler.Empty
+    val inputHandler = InputHandler.Empty
     CompositionLocalProvider(
         LocalTechnetiumTheme provides TechnetiumTheme(),
         LocalInputHandler provides inputHandler,
