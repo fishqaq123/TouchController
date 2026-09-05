@@ -8,7 +8,7 @@ package top.technetium.chat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.multiplayer.chat.GuiMessage;
-import top.technetium.mixin.ChatComponentWithMessages;
+import top.technetium.chat.ChatComponentWithMessages;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -36,7 +36,7 @@ public final class ChatMessagesBridge {
             Field chatField = client.gui.hud.getClass().getDeclaredField("chat");
             chatField.setAccessible(true);
             Object chatComponentObj = chatField.get(client.gui.hud);
-            
+
             if (chatComponentObj instanceof ChatComponentWithMessages) {
                 List<GuiMessage> messages = ((ChatComponentWithMessages) chatComponentObj).technetium$getMessages();
                 List<String> result = new ArrayList<>(messages.size());
