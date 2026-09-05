@@ -14,10 +14,13 @@ neoforge_mod_toml_jar(
 
 kt_merge_library(
     name = "neoforge_unmerged",
-    srcs = glob([
-        "src/main/kotlin/**/*.kt",
-        "src/main/kotlin/**/*.java",
-    ]),
+    srcs = glob(
+        [
+            "src/main/kotlin/**/*.kt",
+            "src/main/kotlin/**/*.java",
+        ],
+        allow_empty = True,
+    ),
     javac_opts = "//combine:javac_opts_jvm_25",
     kotlinc_opts = "//combine:kotlinc_opts_jvm_25",
     resource_strip_prefix = "technetium/versions/neoforge/26.2/src/main/resources",
