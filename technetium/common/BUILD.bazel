@@ -34,6 +34,7 @@ kt_merge_library(
         # combine 主题
         "//combine/theme/base",
         "//combine/theme/blackstone",
+        "//combine/theme/blackstone:blackstone_texture_lib",
         "//combine/theme/vanilla",
         "//combine/widget",
 
