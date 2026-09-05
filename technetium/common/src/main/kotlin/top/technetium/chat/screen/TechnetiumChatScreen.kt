@@ -29,7 +29,7 @@ import top.fifthlight.combine.core.screen.ScreenFactoryFactory
 import top.fifthlight.combine.core.widget.layout.Column
 import top.fifthlight.combine.core.widget.layout.Row
 import top.fifthlight.combine.theme.invoke
-import top.fifthlight.combine.theme.blackstone.BlackstoneTheme
+import top.technetium.ui.theme.TechnetiumTheme
 import top.fifthlight.combine.widget.Button
 import top.fifthlight.combine.widget.EditText
 import top.fifthlight.combine.widget.Text
@@ -39,7 +39,7 @@ import top.technetium.chat.model.TechnetiumChatScreenModel
 /**
  * Technetium 聊天界面。
  *
- * 基于 TC 的 ChatScreen 重写，使用 BlackstoneTheme：
+ * 基于 TC 的 ChatScreen 重写，使用 TechnetiumTheme（其提供了 TechnetiumInputHandler → 键盘呼出）：
  * - 保留原版布局（键盘、设置、输入框、发送）
  * - 新增命令补全建议列表（当输入 / 开头时显示）
  * - 新增 Tab 虚拟按键（用于快速补全）
@@ -53,7 +53,7 @@ fun TechnetiumChatScreen() {
         }
     }
 
-    BlackstoneTheme {
+    TechnetiumTheme {
         val uiState by screenModel.uiState.collectAsState()
         val onClose = LocalCloseHandler.current
 
