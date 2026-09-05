@@ -6,7 +6,6 @@
 package top.technetium.neoforge.v26_2
 
 import net.minecraft.client.Minecraft
-import net.neoforged.api.distmarker.Dist
 import net.neoforged.bus.api.IEventBus
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
@@ -27,8 +26,8 @@ import org.slf4j.LoggerFactory
  *
  * 注意:modid 需与 resources/neoforge.mods.toml 里的 [[mods]].modId 一致(technetium)。
  */
-@Mod("technetium", dist = [Dist.CLIENT])
-@EventBusSubscriber(modid = "technetium", value = [Dist.CLIENT])
+@Mod("technetium")
+@EventBusSubscriber(modid = "technetium")
 class Technetium(modEventBus: IEventBus) {
     private val logger = LoggerFactory.getLogger(Technetium::class.java)
 
