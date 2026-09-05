@@ -11,7 +11,8 @@ kt_merge_library(
         [
             "src/main/kotlin/**/*.kt",
             "src/main/kotlin/**/*.java",
-        ]
+        ],
+        allow_empty = True,
     ),
     javac_opts = "//technetium:javac_opts_jvm_25",
     kotlinc_opts = "//technetium:kotlinc_opts_jvm_25",
