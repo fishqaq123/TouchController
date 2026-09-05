@@ -29,6 +29,7 @@ kt_merge_library(
         "//combine/core/modifier/focus",
         "//combine/core/modifier/placement",
         "//combine/core/modifier/scroll",
+        "//combine/core/node",
         "//combine/core/paint",
         "//combine/core/screen",
         "//combine/core/util/dispatcher",
