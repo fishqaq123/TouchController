@@ -8,8 +8,6 @@ package top.technetium.ui.theme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
-import top.fifthlight.combine.core.node.LocalInputHandler
-import top.fifthlight.combine.core.paint.BackgroundTexture
 import top.fifthlight.combine.core.paint.Drawable
 import top.fifthlight.combine.theme.LocalTheme
 import top.fifthlight.combine.theme.Theme
@@ -19,7 +17,6 @@ import top.fifthlight.combine.theme.blackstone.BlackstoneTheme
 val LocalTechnetiumTheme = staticCompositionLocalOf { TechnetiumTheme() }
 
 data class TechnetiumTheme(
-    val background: BackgroundTexture = BlackstoneTextures.background,
     val borderBackgroundDark: Drawable = BlackstoneTextures.widget_background_background_dark,
 
     val appBarBackground: Drawable = BlackstoneTextures.widget_background_background_gray_title,
