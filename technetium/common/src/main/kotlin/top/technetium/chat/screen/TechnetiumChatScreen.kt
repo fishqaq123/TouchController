@@ -228,6 +228,7 @@ fun TechnetiumChatScreen() {
  * 打开 Technetium 聊天界面的入口。
  */
 object TechnetiumChatScreen {
+    @JvmStatic
     fun openFor(client: Minecraft) {
         val parent = client.gui.screen()
         val screen = ScreenFactoryFactory.of().getScreen(
