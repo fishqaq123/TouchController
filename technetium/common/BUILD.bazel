@@ -18,9 +18,11 @@ kt_merge_library(
         "//:compose",
         # Minecraft 编译期类(含 Brigadier 等 MC 内置依赖)
         "//combine/backend/minecraft/game/26.2",
+        "//combine/backend/minecraft/input/26.2",
         # combine 核心 API
         "//combine/core/data",
         "//combine/core/input/interaction",
+        "//combine/core/input/text",
         "//combine/core/layout",
         "//combine/core/modifier",
         "//combine/core/modifier/drawing",
