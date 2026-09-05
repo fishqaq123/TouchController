@@ -29,7 +29,7 @@ import top.fifthlight.combine.core.screen.ScreenFactoryFactory
 import top.fifthlight.combine.core.widget.layout.Column
 import top.fifthlight.combine.core.widget.layout.Row
 import top.fifthlight.combine.theme.invoke
-import top.fifthlight.combine.theme.vanilla.VanillaTheme
+import top.fifthlight.combine.theme.blackstone.BlackstoneTheme
 import top.fifthlight.combine.widget.Button
 import top.fifthlight.combine.widget.EditText
 import top.fifthlight.combine.widget.Text
@@ -39,10 +39,10 @@ import top.technetium.chat.model.TechnetiumChatScreenModel
 /**
  * Technetium 聊天界面。
  *
- * 基于 TC 的 ChatScreen 重写，使用 combine 公开 API + VanillaTheme：
+ * 基于 TC 的 ChatScreen 重写，使用 BlackstoneTheme：
+ * - 保留原版布局（键盘、设置、输入框、发送）
  * - 新增命令补全建议列表（当输入 / 开头时显示）
  * - 新增 Tab 虚拟按键（用于快速补全）
- * - 消息获取通过 ChatComponentMixin 注入到 MC ChatComponent
  */
 @Composable
 fun TechnetiumChatScreen() {
@@ -53,14 +53,14 @@ fun TechnetiumChatScreen() {
         }
     }
 
-    VanillaTheme {
+    BlackstoneTheme {
         val uiState by screenModel.uiState.collectAsState()
         val onClose = LocalCloseHandler.current
 
         Column(
             modifier = Modifier.fillMaxSize(),
         ) {
-            // 顶部标题栏
+            // 顶部标题栏（模仿原版 AppBar）
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -134,7 +134,7 @@ fun TechnetiumChatScreen() {
                 }
             }
 
-            // 底部输入栏
+            // 底部输入栏（模仿原版布局：键盘、设置、输入框、Tab、发送）
             val bottomBarHeight = 32
             Row(
                 modifier = Modifier
@@ -158,16 +158,32 @@ fun TechnetiumChatScreen() {
                     }
                 }
 
-                // Tab 虚拟按键 - 用于命令补全
+                // 键盘图标按钮（模仿原版）
                 Button(
                     onClick = {
-                        screenModel.applySelectedSuggestion()
+                        if (focused) {
+                            focusRequester.requestBlur()
+                        } else {
+                            focusRequester.requestFocus()
+                        }
                     },
                     modifier = Modifier
                         .width(bottomBarHeight)
                         .fillMaxHeight(),
                 ) {
-                    Text("Tab")
+                    Text("⌨")
+                }
+
+                // 设置按钮（模仿原版）
+                Button(
+                    onClick = {
+                        screenModel.openSettingsDialog()
+                    },
+                    modifier = Modifier
+                        .width(bottomBarHeight)
+                        .fillMaxHeight(),
+                ) {
+                    Text("⚙")
                 }
 
                 // 输入框
@@ -181,6 +197,18 @@ fun TechnetiumChatScreen() {
                     onValueChanged = screenModel::updateText,
                     onEnter = screenModel::sendText,
                 )
+
+                // Tab 虚拟按键 - 用于命令补全
+                Button(
+                    onClick = {
+                        screenModel.applySelectedSuggestion()
+                    },
+                    modifier = Modifier
+                        .width(bottomBarHeight)
+                        .fillMaxHeight(),
+                ) {
+                    Text("Tab")
+                }
 
                 // 发送按钮
                 Button(
@@ -200,7 +228,6 @@ fun TechnetiumChatScreen() {
  * 打开 Technetium 聊天界面的入口。
  */
 object TechnetiumChatScreen {
-    @JvmStatic
     fun openFor(client: Minecraft) {
         val parent = client.gui.screen()
         val screen = ScreenFactoryFactory.of().getScreen(
