@@ -10,6 +10,7 @@ import net.minecraft.client.multiplayer.chat.GuiMessage;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import top.technetium.chat.ChatComponentWithMessages;
 
 import java.util.List;
 
