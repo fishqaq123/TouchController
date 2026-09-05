@@ -16,18 +16,18 @@ kt_merge_library(
     name = "neoforge_unmerged",
     srcs = glob([
         "src/main/kotlin/**/*.kt",
+        "src/main/kotlin/**/*.java",
     ]),
-    javac_opts = "//technetium:javac_opts_jvm_25",
-    kotlinc_opts = "//technetium:kotlinc_opts_jvm_25",
-    # neoforge.mods.toml 必须通过 neoforge_mod_toml 打进 META-INF/,不能走普通 resources(会跑到根目录)。
+    javac_opts = "//combine:javac_opts_jvm_25",
+    kotlinc_opts = "//combine:kotlinc_opts_jvm_25",
     resource_strip_prefix = "technetium/versions/neoforge/26.2/src/main/resources",
+    resource_jars = [
+        ":neoforge_mod_toml",
+    ],
     resources = glob(
         ["src/main/resources/**"],
         exclude = ["src/main/resources/neoforge.mods.toml"],
     ),
-    resource_jars = [
-        ":neoforge_mod_toml",
-    ],
     deps = [
         "//:compose",
         "//technetium/common",
@@ -48,8 +48,6 @@ kt_merge_library(
         "//game/26.2:game_client_neoforge",
 
         # NeoForge + Mixin(neoforge maven repo 别名 @neoforge_26_2)
-        # neoforge_deps 是合并的 NeoForge API 依赖(提供 net.neoforged.api.distmarker.Dist 等)
-        "@neoforge_26_2//:neoforge_deps",
         "@neoforge_26_2//:net_fabricmc_sponge_mixin",
         "@neoforge_26_2//:net_neoforged_bus",
         "@neoforge_26_2//:net_neoforged_fancymodloader_loader",
