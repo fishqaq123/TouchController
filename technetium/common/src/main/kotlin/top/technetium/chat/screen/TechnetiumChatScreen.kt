@@ -135,30 +135,30 @@ fun TechnetiumChatScreen() {
             }
 
             // 底部输入栏（模仿原版布局：键盘、设置、输入框、Tab、发送）
-            val bottomBarHeight = 32
+            val bottomBarHeight = 40
+            val focusRequester = remember { FocusRequester() }
+            val interactionSource = remember { MutableInteractionSource() }
+            var focused by remember { mutableStateOf(false) }
+            LaunchedEffect(interactionSource) {
+                interactionSource.interactions.collect {
+                    when (it) {
+                        FocusInteraction.Blur -> {
+                            focused = false
+                        }
+
+                        FocusInteraction.Focus -> {
+                            focused = true
+                        }
+                    }
+                }
+            }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(bottomBarHeight),
             ) {
-                val focusRequester = remember { FocusRequester() }
-                val interactionSource = remember { MutableInteractionSource() }
-                var focused by remember { mutableStateOf(false) }
-                LaunchedEffect(interactionSource) {
-                    interactionSource.interactions.collect {
-                        when (it) {
-                            FocusInteraction.Blur -> {
-                                focused = false
-                            }
-
-                            FocusInteraction.Focus -> {
-                                focused = true
-                            }
-                        }
-                    }
-                }
-
-                // 键盘图标按钮（模仿原版）
+                // 键盘按钮（放大）
                 Button(
                     onClick = {
                         if (focused) {
@@ -168,19 +168,19 @@ fun TechnetiumChatScreen() {
                         }
                     },
                     modifier = Modifier
-                        .width(bottomBarHeight)
+                        .width(40)
                         .fillMaxHeight(),
                 ) {
                     Text("⌨")
                 }
 
-                // 设置按钮（模仿原版）
+                // 设置按钮（放大）
                 Button(
                     onClick = {
                         screenModel.openSettingsDialog()
                     },
                     modifier = Modifier
-                        .width(bottomBarHeight)
+                        .width(40)
                         .fillMaxHeight(),
                 ) {
                     Text("⚙")
@@ -204,7 +204,7 @@ fun TechnetiumChatScreen() {
                         screenModel.applySelectedSuggestion()
                     },
                     modifier = Modifier
-                        .width(bottomBarHeight)
+                        .width(36)
                         .fillMaxHeight(),
                 ) {
                     Text("Tab")
