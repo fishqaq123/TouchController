@@ -153,6 +153,11 @@ fun TechnetiumChatScreen() {
                 }
             }
 
+            // 打开聊天屏时自动聚焦输入框 → 触发 updateInputState → TechnetiumInputHandler 弹出虚拟键盘
+            LaunchedEffect(Unit) {
+                focusRequester.requestFocus()
+            }
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
