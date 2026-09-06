@@ -6,7 +6,10 @@
 package top.technetium.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import net.minecraft.client.Minecraft
+import net.minecraft.resources.Identifier
+import top.fifthlight.combine.backend.minecraft.render.v26_2.TextureImpl
 import top.fifthlight.combine.core.layout.Alignment
 import top.fifthlight.combine.core.layout.Arrangement
 import top.fifthlight.combine.core.modifier.Modifier
@@ -15,8 +18,10 @@ import top.fifthlight.combine.core.modifier.placement.fillMaxHeight
 import top.fifthlight.combine.core.modifier.placement.fillMaxSize
 import top.fifthlight.combine.core.modifier.placement.fillMaxWidth
 import top.fifthlight.combine.core.modifier.placement.height
+import top.fifthlight.combine.core.modifier.placement.padding
 import top.fifthlight.combine.core.modifier.placement.width
 import top.fifthlight.combine.core.paint.Color
+import top.fifthlight.combine.core.paint.Drawable
 import top.fifthlight.combine.core.screen.LocalCloseHandler
 import top.fifthlight.combine.core.widget.layout.Box
 import top.fifthlight.combine.core.widget.layout.Column
@@ -25,6 +30,7 @@ import top.fifthlight.combine.theme.blackstone.BlackstoneTheme
 import top.fifthlight.combine.theme.invoke
 import top.fifthlight.combine.widget.Button
 import top.fifthlight.combine.widget.Text
+import top.fifthlight.data.IntSize
 
 /**
  * 仿基岩版主菜单。
@@ -40,31 +46,44 @@ import top.fifthlight.combine.widget.Text
  */
 @Composable
 fun BedrockMenuScreen() {
-    val gray = Color(0xFF808080u)
+    // 灰色(带透明度,让右半区蒙版有点透明)。0x80 = 50% alpha。
+    val gray = Color(0x80808080u)
     BlackstoneTheme {
         val onClose = LocalCloseHandler.current
         Row(modifier = Modifier.fillMaxSize()) {
-            // 左半区:按钮列垂直居中,按钮上下紧凑无间隔
+            // 左半区:logo 在上方水平居中,按钮列往下(给 logo 留位置)
             Box(
                 modifier = Modifier.weight(1f).fillMaxHeight(),
-                alignment = Alignment.Center,
+                alignment = Alignment.TopLeft,
             ) {
                 Column(
-                    modifier = Modifier.width(200),
+                    modifier = Modifier.fillMaxSize().padding(top = 24),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(0),
                 ) {
-                    MenuButton("回到游戏") {
-                        onClose.close() // 关闭本菜单,回到游戏
-                    }
-                    MenuButton("设置") {
-                        // TODO: 后续做设置二级 UI。
-                        onClose.close()
-                    }
-                    MenuButton("保存并退出") {
-                        // 保存并退出到标题。
-                        onClose.close()
-                        disconnectAndReturnToTitle()
+                    // logo 占位(黑紫块,等本地图片),在左半区上方水平居中
+                    TitleLogo()
+
+                    // logo 下方留空隙,按钮往下移
+                    Box(modifier = Modifier.height(60))
+
+                    // 按钮列,上下紧凑无间隔
+                    Column(
+                        modifier = Modifier.width(200),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(0),
+                    ) {
+                        MenuButton("回到游戏") {
+                            onClose.close() // 关闭本菜单,回到游戏
+                        }
+                        MenuButton("设置") {
+                            // TODO: 后续做设置二级 UI。
+                            onClose.close()
+                        }
+                        MenuButton("保存并退出") {
+                            // 保存并退出到标题。
+                            onClose.close()
+                            disconnectAndReturnToTitle()
+                        }
                     }
                 }
             }
@@ -77,7 +96,7 @@ fun BedrockMenuScreen() {
                     .background(gray),
             )
 
-            // 右半区:全部铺成跟辅助线一样的灰色(蒙版)
+            // 右半区:灰色半透明蒙版
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -86,6 +105,24 @@ fun BedrockMenuScreen() {
             )
         }
     }
+}
+
+/** logo 占位(黑紫缺失纹理块,等用户提供本地图片做内部引用)。 */
+@Composable
+private fun TitleLogo() {
+    val logo: Drawable = remember {
+        TextureImpl(
+            identifier = Identifier.withDefaultNamespace("gui/title/minecraft"),
+            sprite = false,
+            size = IntSize(256, 64),
+        )
+    }
+    Box(
+        modifier = Modifier
+            .width(256)
+            .height(64)
+            .background(logo),
+    )
 }
 
 /** 基岩风格大按钮封装。 */
