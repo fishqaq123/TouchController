@@ -7,7 +7,6 @@ package top.technetium.ui
 
 import androidx.compose.runtime.Composable
 import net.minecraft.client.Minecraft
-import net.minecraft.network.chat.Component
 import top.fifthlight.combine.core.layout.Alignment
 import top.fifthlight.combine.core.layout.Arrangement
 import top.fifthlight.combine.core.modifier.Modifier
@@ -62,9 +61,10 @@ fun BedrockMenuScreen() {
                         onClose.close()
                     }
                     MenuButton("返回标题") {
-                        // 保存并退出到标题(ClientLevel.disconnect(message) 保存当前世界并断开返回主菜单)。
+                        // 保存并退出到标题。用反射调用 disconnect(Component),
+                        // 目的:避开编译期对 com.mojang.brigadier.Message(Component 超类)的依赖。
                         onClose.close()
-                        Minecraft.getInstance().level?.disconnect(Component.literal("保存并退出"))
+                        disconnectAndReturnToTitle()
                     }
                 }
 
@@ -103,5 +103,25 @@ private fun PlayerListBox() {
                 Text("${index + 1} $name", modifier = Modifier.fillMaxWidth())
             }
         }
+    }
+}
+
+/**
+ * 保存并退出到标题。
+ *
+ * 用反射调用 ClientLevel.disconnect(Component),避免编译期依赖
+ * com.mojang.brigadier.Message(Component 的超类型)——该库不在 Technetium 编译类路径上。
+ */
+private fun disconnectAndReturnToTitle() {
+    val client = Minecraft.getInstance()
+    val level = client.level ?: return
+    try {
+        val componentClass = Class.forName("net.minecraft.network.chat.Component")
+        val literal = componentClass.getMethod("literal", String::class.java)
+            .invoke(null, "保存并退出")
+        val disconnect = level.javaClass.getMethod("disconnect", componentClass)
+        disconnect.invoke(level, literal)
+    } catch (_: Exception) {
+        // 反射失败时静默忽略,避免崩溃(可后续改为日志)。
     }
 }
