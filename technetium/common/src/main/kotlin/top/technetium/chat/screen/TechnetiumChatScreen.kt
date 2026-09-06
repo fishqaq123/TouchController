@@ -118,6 +118,7 @@ fun TechnetiumChatScreen() {
                         val isSelected = index == uiState.selectedSuggestionIndex
                         Button(
                             onClick = { screenModel.applySuggestion(index) },
+                            focusable = false,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(16),
@@ -203,11 +204,12 @@ fun TechnetiumChatScreen() {
                     onEnter = screenModel::sendText,
                 )
 
-                // Tab 虚拟按键
+                // Tab 虚拟按键(focusable=false 避免点击时抢走输入框焦点)
                 Button(
                     onClick = {
                         screenModel.applySelectedSuggestion()
                     },
+                    focusable = false,
                     modifier = Modifier
                         .width(36)
                         .fillMaxHeight(),
