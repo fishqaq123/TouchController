@@ -47,7 +47,7 @@ fun BedrockMenuScreen() {
             // 左半区:按钮列垂直居中,按钮上下紧凑无间隔
             Box(
                 modifier = Modifier.weight(1f).fillMaxHeight(),
-                contentAlignment = Alignment.Center,
+                alignment = Alignment.Center,
             ) {
                 Column(
                     modifier = Modifier.width(200),
