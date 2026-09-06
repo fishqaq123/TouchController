@@ -28,6 +28,7 @@ import top.fifthlight.combine.theme.blackstone.BlackstoneTheme
 import top.fifthlight.combine.theme.invoke
 import top.fifthlight.combine.widget.Button
 import top.fifthlight.combine.widget.Text
+import top.fifthlight.data.IntSize
 
 /**
  * 仿基岩版主菜单(基岩版暂停菜单布局)。
@@ -80,6 +81,7 @@ private fun TitleLogo() {
         TextureImpl(
             identifier = Identifier.withDefaultNamespace("gui/title/minecraft"),
             sprite = false,
+            size = IntSize(256, 64),
         )
     }
     Box(
