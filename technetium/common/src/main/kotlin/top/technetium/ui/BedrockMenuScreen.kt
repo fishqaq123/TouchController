@@ -6,20 +6,17 @@
 package top.technetium.ui
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import net.minecraft.client.Minecraft
-import net.minecraft.resources.Identifier
-import top.fifthlight.combine.backend.minecraft.render.v26_2.TextureImpl
 import top.fifthlight.combine.core.layout.Alignment
 import top.fifthlight.combine.core.layout.Arrangement
 import top.fifthlight.combine.core.modifier.Modifier
 import top.fifthlight.combine.core.modifier.drawing.background
+import top.fifthlight.combine.core.modifier.placement.fillMaxHeight
 import top.fifthlight.combine.core.modifier.placement.fillMaxSize
 import top.fifthlight.combine.core.modifier.placement.fillMaxWidth
 import top.fifthlight.combine.core.modifier.placement.height
-import top.fifthlight.combine.core.modifier.placement.padding
 import top.fifthlight.combine.core.modifier.placement.width
-import top.fifthlight.combine.core.paint.Drawable
+import top.fifthlight.combine.core.paint.Color
 import top.fifthlight.combine.core.screen.LocalCloseHandler
 import top.fifthlight.combine.core.widget.layout.Box
 import top.fifthlight.combine.core.widget.layout.Column
@@ -28,68 +25,67 @@ import top.fifthlight.combine.theme.blackstone.BlackstoneTheme
 import top.fifthlight.combine.theme.invoke
 import top.fifthlight.combine.widget.Button
 import top.fifthlight.combine.widget.Text
-import top.fifthlight.data.IntSize
 
 /**
- * 仿基岩版主菜单(基岩版暂停菜单布局)。
+ * 仿基岩版主菜单。
  *
- * 布局(参照基岩版菜单截图):
- *  - 顶部:原版 "MINECRAFT" 大 logo(用 TextureImpl 加载原版 GUI 标题纹理,资源包改图会同步)
- *  - 中间一列三个大按钮:回到游戏 / 设置 / 保存并退出
+ * 布局(用户规定):
+ *  - 屏幕正中间一条灰色辅助线(竖线);
+ *  - 辅助线右侧全部铺成与辅助线相同的灰色(右半区蒙版);
+ *  - 辅助线左侧单独布置:
+ *    - 按钮列(回到游戏 / 设置 / 保存并退出),上下无间隔、紧凑;
+ *    - 按钮在"屏幕左侧与辅助线之间"居中。
  *
- * 说明:combine 是 Compose 风格,按钮点击回调直接写 onClick。
- *      设置按钮暂为占位(后续做二级 UI)。
+ * 注:顶部 logo 暂不渲染(等用户提供本地图片做内部引用)。
  */
 @Composable
 fun BedrockMenuScreen() {
+    val gray = Color(0xFF808080u)
     BlackstoneTheme {
         val onClose = LocalCloseHandler.current
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            alignment = Alignment.Center,
-        ) {
-            Column(
-                modifier = Modifier.width(300).padding(24),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12),
+        Row(modifier = Modifier.fillMaxSize()) {
+            // 左半区:按钮列垂直居中,按钮上下紧凑无间隔
+            Box(
+                modifier = Modifier.weight(1f).fillMaxHeight(),
+                contentAlignment = Alignment.Center,
             ) {
-                // 顶部原版 "MINECRAFT" 大 logo
-                TitleLogo()
-
-                // 三个大按钮:回到游戏 / 设置 / 保存并退出
-                MenuButton("回到游戏") {
-                    onClose.close() // 关闭本菜单,回到游戏
-                }
-                MenuButton("设置") {
-                    // TODO: 后续做设置二级 UI。
-                    onClose.close()
-                }
-                MenuButton("保存并退出") {
-                    // 保存并退出到标题。
-                    onClose.close()
-                    disconnectAndReturnToTitle()
+                Column(
+                    modifier = Modifier.width(200),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(0),
+                ) {
+                    MenuButton("回到游戏") {
+                        onClose.close() // 关闭本菜单,回到游戏
+                    }
+                    MenuButton("设置") {
+                        // TODO: 后续做设置二级 UI。
+                        onClose.close()
+                    }
+                    MenuButton("保存并退出") {
+                        // 保存并退出到标题。
+                        onClose.close()
+                        disconnectAndReturnToTitle()
+                    }
                 }
             }
+
+            // 中间灰色辅助线(竖线)
+            Box(
+                modifier = Modifier
+                    .width(3)
+                    .fillMaxHeight()
+                    .background(gray),
+            )
+
+            // 右半区:全部铺成跟辅助线一样的灰色(蒙版)
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .background(gray),
+            )
         }
     }
-}
-
-/** 原版 Minecraft 主菜单大 logo。用原版 GUI 标题纹理渲染(资源包改图会同步)。 */
-@Composable
-private fun TitleLogo() {
-    val logo: Drawable = remember {
-        TextureImpl(
-            identifier = Identifier.withDefaultNamespace("gui/title/minecraft"),
-            sprite = false,
-            size = IntSize(256, 64),
-        )
-    }
-    Box(
-        modifier = Modifier
-            .width(300)
-            .height(80)
-            .background(logo),
-    )
 }
 
 /** 基岩风格大按钮封装。 */
