@@ -46,8 +46,8 @@ import top.fifthlight.data.IntSize
  */
 @Composable
 fun BedrockMenuScreen() {
-    // 灰色(带透明度,让右半区蒙版有点透明)。0x80 = 50% alpha。
-    val gray = Color(0x80808080u)
+    // 灰色(带透明度,让右半区蒙版有点透明)。0x99 ≈ 60% alpha(比之前 50% 略高)。
+    val gray = Color(0x99808080u)
     BlackstoneTheme {
         val onClose = LocalCloseHandler.current
         Row(modifier = Modifier.fillMaxSize()) {
@@ -63,8 +63,8 @@ fun BedrockMenuScreen() {
                     // logo 占位(黑紫块,等本地图片),在左半区上方水平居中
                     TitleLogo()
 
-                    // logo 下方留空隙,按钮往下移
-                    Box(modifier = Modifier.height(60))
+                    // logo 下方留空隙,按钮往下移(比之前小,按钮往上挪一点)
+                    Box(modifier = Modifier.height(36))
 
                     // 按钮列,上下紧凑无间隔
                     Column(
@@ -107,20 +107,21 @@ fun BedrockMenuScreen() {
     }
 }
 
-/** logo 占位(黑紫缺失纹理块,等用户提供本地图片做内部引用)。 */
+/** Minecraft 大 logo(内部引用我们从原 jar 里提取的 minecraft.png,资源包改图会同步)。 */
 @Composable
 private fun TitleLogo() {
     val logo: Drawable = remember {
         TextureImpl(
-            identifier = Identifier.withDefaultNamespace("gui/title/minecraft"),
+            // 加载 we 打包进 jar 的资源:assets/technetium/textures/gui/title/minecraft.png
+            identifier = Identifier.fromNamespaceAndPath("technetium", "gui/title/minecraft"),
             sprite = false,
-            size = IntSize(256, 64),
+            size = IntSize(1024, 256),
         )
     }
     Box(
         modifier = Modifier
-            .width(256)
-            .height(64)
+            .width(512)
+            .height(128)
             .background(logo),
     )
 }
