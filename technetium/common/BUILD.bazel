@@ -13,9 +13,6 @@ kt_merge_library(
     ]),
     javac_opts = "//technetium:javac_opts_jvm_25",
     kotlinc_opts = "//technetium:kotlinc_opts_jvm_25",
-    # 资源:打包 assets/technetium/textures/gui/title/minecraft.png(内部引用的 logo 图)
-    resource_strip_prefix = "technetium/common/src/main/resources",
-    resources = glob(["src/main/resources/**"]),
     # 仿基岩菜单用 combine(public);Mixin 需要 mixin 框架。
     deps = [
         "//:compose",
