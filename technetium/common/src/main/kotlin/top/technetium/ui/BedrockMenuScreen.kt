@@ -8,8 +8,6 @@ package top.technetium.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import net.minecraft.client.Minecraft
-import net.minecraft.resources.Identifier
-import top.fifthlight.combine.backend.minecraft.render.v26_2.TextureImpl
 import top.fifthlight.combine.core.layout.Alignment
 import top.fifthlight.combine.core.layout.Arrangement
 import top.fifthlight.combine.core.modifier.Modifier
@@ -20,8 +18,8 @@ import top.fifthlight.combine.core.modifier.placement.fillMaxWidth
 import top.fifthlight.combine.core.modifier.placement.height
 import top.fifthlight.combine.core.modifier.placement.padding
 import top.fifthlight.combine.core.modifier.placement.width
+import top.fifthlight.combine.core.paint.BackgroundTexture
 import top.fifthlight.combine.core.paint.Color
-import top.fifthlight.combine.core.paint.Drawable
 import top.fifthlight.combine.core.screen.LocalCloseHandler
 import top.fifthlight.combine.core.widget.layout.Box
 import top.fifthlight.combine.core.widget.layout.Column
@@ -30,7 +28,6 @@ import top.fifthlight.combine.theme.blackstone.BlackstoneTheme
 import top.fifthlight.combine.theme.invoke
 import top.fifthlight.combine.widget.Button
 import top.fifthlight.combine.widget.Text
-import top.fifthlight.data.IntSize
 
 /**
  * 仿基岩版主菜单。
@@ -110,13 +107,10 @@ fun BedrockMenuScreen() {
 /** Minecraft 大 logo(内部引用我们从原 jar 里提取的 minecraft.png,资源包改图会同步)。 */
 @Composable
 private fun TitleLogo() {
-    val logo: Drawable = remember {
-        TextureImpl(
-            // 原版内置 GUI 标题 logo。用 sprite=true 走 MC 的 atlas sprite 加载。
-            identifier = Identifier.withDefaultNamespace("gui/title/minecraft"),
-            sprite = true,
-            size = IntSize(1024, 256),
-        )
+    // 用 BackgroundTexture(combine 专门渲染整张图的机制)加载我们打包进 jar 的资源:
+    // assets/technetium/textures/gui/title/minecraft.png (technetium:gui/title/minecraft)
+    val logo: BackgroundTexture = remember {
+        BackgroundTexture.Factory.create("technetium", "gui/title/minecraft", 1024, 256)
     }
     Box(
         modifier = Modifier
