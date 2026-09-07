@@ -46,8 +46,8 @@ import top.fifthlight.data.IntSize
  */
 @Composable
 fun BedrockMenuScreen() {
-    // 灰色(带透明度,让右半区蒙版有点透明)。0x99 ≈ 60% alpha(比之前 50% 略高)。
-    val gray = Color(0x99808080u)
+    // 灰色(蒙版)。0xD0 ≈ 82% alpha,接近不透明(用户嫌之前太透明)。
+    val gray = Color(0xD0808080u)
     BlackstoneTheme {
         val onClose = LocalCloseHandler.current
         Row(modifier = Modifier.fillMaxSize()) {
@@ -57,7 +57,7 @@ fun BedrockMenuScreen() {
                 alignment = Alignment.TopLeft,
             ) {
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(top = 24),
+                    modifier = Modifier.fillMaxSize().padding(top = 24, start = 40, end = 40),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     // logo 占位(黑紫块,等本地图片),在左半区上方水平居中
@@ -112,8 +112,8 @@ fun BedrockMenuScreen() {
 private fun TitleLogo() {
     val logo: Drawable = remember {
         TextureImpl(
-            // 加载 we 打包进 jar 的资源:assets/technetium/textures/gui/title/minecraft.png
-            identifier = Identifier.fromNamespaceAndPath("technetium", "gui/title/minecraft"),
+            // 原版内置资源:assets/minecraft/textures/gui/title/minecraft.png (minecraft:gui/title/minecraft)
+            identifier = Identifier.withDefaultNamespace("gui/title/minecraft"),
             sprite = false,
             size = IntSize(1024, 256),
         )
