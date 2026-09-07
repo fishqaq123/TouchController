@@ -57,7 +57,7 @@ fun BedrockMenuScreen() {
                 alignment = Alignment.TopLeft,
             ) {
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(top = 24, start = 40, end = 40),
+                    modifier = Modifier.fillMaxSize().padding(top = 24, left = 40, right = 40),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     // logo 占位(黑紫块,等本地图片),在左半区上方水平居中
