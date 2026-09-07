@@ -8,6 +8,8 @@ package top.technetium.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import net.minecraft.client.Minecraft
+import net.minecraft.resources.Identifier
+import top.fifthlight.combine.backend.minecraft.render.v26_2.BackgroundTextureImpl
 import top.fifthlight.combine.core.layout.Alignment
 import top.fifthlight.combine.core.layout.Arrangement
 import top.fifthlight.combine.core.modifier.Modifier
@@ -28,6 +30,7 @@ import top.fifthlight.combine.theme.blackstone.BlackstoneTheme
 import top.fifthlight.combine.theme.invoke
 import top.fifthlight.combine.widget.Button
 import top.fifthlight.combine.widget.Text
+import top.fifthlight.data.IntSize
 
 /**
  * 仿基岩版主菜单。
@@ -110,7 +113,10 @@ private fun TitleLogo() {
     // 用 BackgroundTexture(combine 专门渲染整张图的机制)加载我们打包进 jar 的资源:
     // assets/technetium/textures/gui/title/minecraft.png (technetium:gui/title/minecraft)
     val logo: BackgroundTexture = remember {
-        BackgroundTexture.Factory.create("technetium", "gui/title/minecraft", 1024, 256)
+        BackgroundTextureImpl(
+            identifier = Identifier.fromNamespaceAndPath("technetium", "gui/title/minecraft"),
+            size = IntSize(1024, 256),
+        )
     }
     Box(
         modifier = Modifier
