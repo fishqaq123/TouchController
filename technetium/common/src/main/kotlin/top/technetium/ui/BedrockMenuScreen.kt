@@ -112,9 +112,9 @@ fun BedrockMenuScreen() {
 private fun TitleLogo() {
     val logo: Drawable = remember {
         TextureImpl(
-            // 原版内置资源:assets/minecraft/textures/gui/title/minecraft.png (minecraft:gui/title/minecraft)
+            // 原版内置 GUI 标题 logo。用 sprite=true 走 MC 的 atlas sprite 加载。
             identifier = Identifier.withDefaultNamespace("gui/title/minecraft"),
-            sprite = false,
+            sprite = true,
             size = IntSize(1024, 256),
         )
     }
