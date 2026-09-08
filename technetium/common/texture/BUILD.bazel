@@ -1,0 +1,29 @@
+# Technetium 自定义纹理(combine texture_lib 管线)。
+# 参照:combine/theme/blackstone/texture/BUILD.bazel。
+# logo/minecraft.png 用 background=True(不打包进 atlas,整张图直接渲染)。
+
+load("//rule/combine:texture.bzl", "texture", "texture_group", "texture_lib")
+
+texture(
+    name = "logo",
+    srcs = glob(["logo/*.png"]),
+    background = True,
+)
+
+texture_group(
+    name = "texture_group",
+    deps = [
+        ":logo",
+    ],
+)
+
+texture_lib(
+    name = "texture",
+    class_name = "TechnetiumTextures",
+    package = "top.technetium.ui.theme",
+    prefix = "technetium",
+    visibility = ["//technetium:__subpackages__"],
+    deps = [
+        ":texture_group",
+    ],
+)
