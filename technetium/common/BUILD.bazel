@@ -4,14 +4,6 @@
 # 供下游 merge_library_jar 合并。
 
 load("//rule:merge_library.bzl", "kt_merge_library")
-load("//rule/combine:library.bzl", "kt_texture_lib")
-
-# 用 combine 的 kt_texture_lib 从纹理描述(//technetium/common/texture)生成
-# 有 JavaInfo 的 TechnetiumTextures 类库(即 code 里 import 的 top.technetium.ui.theme.TechnetiumTextures)。
-kt_texture_lib(
-    name = "technetium_textures",
-    dep = "//technetium/common/texture",
-)
 
 kt_merge_library(
     name = "common",
@@ -21,10 +13,6 @@ kt_merge_library(
     ]),
     javac_opts = "//technetium:javac_opts_jvm_25",
     kotlinc_opts = "//technetium:kotlinc_opts_jvm_25",
-    # TechnetiumTextures 类库必须用 merge_deps 合入最终产物(仅 deps 不会把类打进 jar)
-    merge_deps = [
-        ":technetium_textures",
-    ],
     # 仿基岩菜单用 combine(public);Mixin 需要 mixin 框架。
     deps = [
         "//:compose",
