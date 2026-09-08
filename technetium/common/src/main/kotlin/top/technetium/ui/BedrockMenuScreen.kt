@@ -8,8 +8,6 @@ package top.technetium.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import net.minecraft.client.Minecraft
-import net.minecraft.resources.Identifier
-import top.fifthlight.combine.backend.minecraft.render.v26_2.BackgroundTextureImpl
 import top.fifthlight.combine.core.layout.Alignment
 import top.fifthlight.combine.core.layout.Arrangement
 import top.fifthlight.combine.core.modifier.Modifier
@@ -20,7 +18,6 @@ import top.fifthlight.combine.core.modifier.placement.fillMaxWidth
 import top.fifthlight.combine.core.modifier.placement.height
 import top.fifthlight.combine.core.modifier.placement.padding
 import top.fifthlight.combine.core.modifier.placement.width
-import top.fifthlight.combine.core.paint.BackgroundTexture
 import top.fifthlight.combine.core.paint.Color
 import top.fifthlight.combine.core.screen.LocalCloseHandler
 import top.fifthlight.combine.core.widget.layout.Box
@@ -30,7 +27,7 @@ import top.fifthlight.combine.theme.blackstone.BlackstoneTheme
 import top.fifthlight.combine.theme.invoke
 import top.fifthlight.combine.widget.Button
 import top.fifthlight.combine.widget.Text
-import top.fifthlight.data.IntSize
+import top.technetium.ui.theme.TechnetiumTextures
 
 /**
  * 仿基岩版主菜单。
@@ -107,22 +104,16 @@ fun BedrockMenuScreen() {
     }
 }
 
-/** Minecraft 大 logo(内部引用我们从原 jar 里提取的 minecraft.png,资源包改图会同步)。 */
+/** Minecraft 大 logo(combine texture_lib 生成的纹理,资源包改图会同步)。 */
 @Composable
 private fun TitleLogo() {
-    // 用 BackgroundTexture(combine 整张图机制)加载我们打包进 jar 的资源。
-    // 路径用 logo/minecraft(避开 gui/ 前缀,否则 MC 会当 GUI sprite 找不到)。
-    val logo: BackgroundTexture = remember {
-        BackgroundTextureImpl(
-            identifier = Identifier.fromNamespaceAndPath("technetium", "logo/minecraft"),
-            size = IntSize(1024, 256),
-        )
-    }
+    // TechnetiumTextures 由 combine 的 texture_lib 规则生成(background=True 的整张图)。
+    // 引用它作为背景纹理直接渲染。
     Box(
         modifier = Modifier
             .width(512)
             .height(128)
-            .background(logo),
+            .background(TechnetiumTextures.logo_minecraft),
     )
 }
 
