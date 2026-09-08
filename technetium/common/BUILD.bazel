@@ -4,6 +4,14 @@
 # 供下游 merge_library_jar 合并。
 
 load("//rule:merge_library.bzl", "kt_merge_library")
+load("//rule/combine:library.bzl", "kt_texture_lib")
+
+# 用 combine 的 kt_texture_lib 从纹理描述(//technetium/common/texture)生成
+# 有 JavaInfo 的 TechnetiumTextures 类库(即 code 里 import 的 top.technetium.ui.theme.TechnetiumTextures)。
+kt_texture_lib(
+    name = "technetium_textures",
+    dep = "//technetium/common/texture",
+)
 
 kt_merge_library(
     name = "common",
@@ -16,8 +24,8 @@ kt_merge_library(
     # 仿基岩菜单用 combine(public);Mixin 需要 mixin 框架。
     deps = [
         "//:compose",
-        # combine 生成的纹理类(TechnetiumTextures)
-        "//technetium/common/texture",
+        # combine 生成的纹理类库(TechnetiumTextures)
+        ":technetium_textures",
         # Minecraft 编译期类(含 Brigadier 等 MC 内置依赖)
         "//combine/backend/minecraft/game/26.2",
         "//combine/backend/minecraft/render/26.2",
