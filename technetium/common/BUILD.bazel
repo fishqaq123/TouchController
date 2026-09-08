@@ -21,11 +21,13 @@ kt_merge_library(
     ]),
     javac_opts = "//technetium:javac_opts_jvm_25",
     kotlinc_opts = "//technetium:kotlinc_opts_jvm_25",
+    # TechnetiumTextures 类库必须用 merge_deps 合入最终产物(仅 deps 不会把类打进 jar)
+    merge_deps = [
+        ":technetium_textures",
+    ],
     # 仿基岩菜单用 combine(public);Mixin 需要 mixin 框架。
     deps = [
         "//:compose",
-        # combine 生成的纹理类库(TechnetiumTextures)
-        ":technetium_textures",
         # Minecraft 编译期类(含 Brigadier 等 MC 内置依赖)
         "//combine/backend/minecraft/game/26.2",
         "//combine/backend/minecraft/render/26.2",
