@@ -110,11 +110,11 @@ fun BedrockMenuScreen() {
 /** Minecraft 大 logo(内部引用我们从原 jar 里提取的 minecraft.png,资源包改图会同步)。 */
 @Composable
 private fun TitleLogo() {
-    // 用 BackgroundTexture(combine 专门渲染整张图的机制)加载我们打包进 jar 的资源:
-    // assets/technetium/textures/gui/title/minecraft.png (technetium:gui/title/minecraft)
+    // 用 BackgroundTexture(combine 整张图机制)加载我们打包进 jar 的资源。
+    // 路径用 logo/minecraft(避开 gui/ 前缀,否则 MC 会当 GUI sprite 找不到)。
     val logo: BackgroundTexture = remember {
         BackgroundTextureImpl(
-            identifier = Identifier.fromNamespaceAndPath("technetium", "gui/title/minecraft"),
+            identifier = Identifier.fromNamespaceAndPath("technetium", "logo/minecraft"),
             size = IntSize(1024, 256),
         )
     }
