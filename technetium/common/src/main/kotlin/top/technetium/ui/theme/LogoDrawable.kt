@@ -10,7 +10,9 @@ import top.fifthlight.combine.backend.minecraft.render.v26_2.CanvasImpl
 import top.fifthlight.combine.core.paint.Canvas
 import top.fifthlight.combine.core.paint.Color
 import top.fifthlight.combine.core.paint.Drawable
+import top.fifthlight.data.IntPadding
 import top.fifthlight.data.IntRect
+import top.fifthlight.data.IntSize
 
 /**
  * 绘制 MINECRAFT logo 的自定义 Drawable。
@@ -19,6 +21,9 @@ import top.fifthlight.data.IntRect
  * 全程不用 textureManager.getTexture("technetium:logo/minecraft")(那会 Missing resource)。
  */
 class LogoDrawable : Drawable {
+    override val size: IntSize = IntSize(1024, 256)
+    override val padding: IntPadding = IntPadding.ZERO
+
     override fun draw(canvas: Canvas, dstRect: IntRect, tint: Color) {
         val guiGraphics = (canvas as? CanvasImpl)?.guiGraphics ?: return
         val location = LogoTexture.getLocation()
