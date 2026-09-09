@@ -691,7 +691,7 @@ object LogoTexture {
         synchronized(this) {
             val bytes: ByteArray = Base64.getDecoder().decode(PNG_BASE64)
             val image = NativeImage.read(ByteArrayInputStream(bytes))
-            val texture = DynamicTexture(image)
+            val texture = DynamicTexture(java.util.function.Supplier { "technetium_logo" }, image)
             val loc = Minecraft.getInstance().textureManager.register(
                 Identifier.fromNamespaceAndPath("technetium", "logo_tex"), texture
             )
