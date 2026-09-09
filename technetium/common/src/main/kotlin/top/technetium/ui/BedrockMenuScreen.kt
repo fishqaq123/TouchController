@@ -8,8 +8,6 @@ package top.technetium.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import net.minecraft.client.Minecraft
-import net.minecraft.resources.Identifier
-import top.fifthlight.combine.backend.minecraft.render.v26_2.BackgroundTextureImpl
 import top.fifthlight.combine.core.layout.Alignment
 import top.fifthlight.combine.core.layout.Arrangement
 import top.fifthlight.combine.core.modifier.Modifier
@@ -20,8 +18,8 @@ import top.fifthlight.combine.core.modifier.placement.fillMaxWidth
 import top.fifthlight.combine.core.modifier.placement.height
 import top.fifthlight.combine.core.modifier.placement.padding
 import top.fifthlight.combine.core.modifier.placement.width
-import top.fifthlight.combine.core.paint.BackgroundTexture
 import top.fifthlight.combine.core.paint.Color
+import top.fifthlight.combine.core.paint.Drawable
 import top.fifthlight.combine.core.screen.LocalCloseHandler
 import top.fifthlight.combine.core.widget.layout.Box
 import top.fifthlight.combine.core.widget.layout.Column
@@ -30,7 +28,7 @@ import top.fifthlight.combine.theme.blackstone.BlackstoneTheme
 import top.fifthlight.combine.theme.invoke
 import top.fifthlight.combine.widget.Button
 import top.fifthlight.combine.widget.Text
-import top.fifthlight.data.IntSize
+import top.technetium.ui.theme.LogoDrawable
 
 /**
  * 仿基岩版主菜单。
@@ -107,16 +105,11 @@ fun BedrockMenuScreen() {
     }
 }
 
-/** Minecraft 大 logo(combine texture_lib 生成的纹理,资源包改图会同步)。 */
+/** Minecraft 大 logo(硬核方式:base64 内嵌 PNG -> NativeImage -> DynamicTexture -> 原生 blit)。 */
 @Composable
 private fun TitleLogo() {
-    // 临时用 BackgroundTextureImpl(能编译)。logo 图片显示方案仍在研究中。
-    val logo: BackgroundTexture = remember {
-        BackgroundTextureImpl(
-            identifier = Identifier.fromNamespaceAndPath("technetium", "logo/minecraft"),
-            size = IntSize(1024, 256),
-        )
-    }
+    // LogoDrawable 在运行时自解码 PNG 字节并原生 blit,绕开 textureManager 加载限制。
+    val logo: Drawable = remember { LogoDrawable() }
     Box(
         modifier = Modifier
             .width(512)
