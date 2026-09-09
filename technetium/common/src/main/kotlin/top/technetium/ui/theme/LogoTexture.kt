@@ -692,9 +692,9 @@ object LogoTexture {
             val bytes: ByteArray = Base64.getDecoder().decode(PNG_BASE64)
             val image = NativeImage.read(ByteArrayInputStream(bytes))
             val texture = DynamicTexture(java.util.function.Supplier { "technetium_logo" }, image)
-            val loc = Minecraft.getInstance().textureManager.register(
-                Identifier.fromNamespaceAndPath("technetium", "logo_tex"), texture
-            )
+            // register 返回 void,id 我们自己构造。
+            val loc = Identifier.fromNamespaceAndPath("technetium", "logo_tex")
+            Minecraft.getInstance().textureManager.register(loc, texture)
             location = loc
             return loc
         }
