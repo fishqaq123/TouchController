@@ -61,11 +61,11 @@ fun BedrockMenuScreen() {
                     // logo 在左半区上方水平居中
                     TitleLogo()
 
-                    // 按钮列占据 logo 以下的剩余空间并垂直居中(即上移居中)
+                    // 按钮列紧贴 logo 下方(顶部对齐,只留小空隙)——比"剩余空间居中"更靠上
                     Column(
-                        modifier = Modifier.weight(1f).width(200),
+                        modifier = Modifier.weight(1f).width(200).padding(top = 12),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
+                        verticalArrangement = Arrangement.Top,
                     ) {
                         MenuButton("回到游戏") {
                             onClose.close() // 关闭本菜单,回到游戏
