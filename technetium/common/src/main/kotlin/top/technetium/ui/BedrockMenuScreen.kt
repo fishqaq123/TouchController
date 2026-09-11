@@ -58,17 +58,14 @@ fun BedrockMenuScreen() {
                     modifier = Modifier.fillMaxSize().padding(top = 24, left = 40, right = 40),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    // logo 占位(黑紫块,等本地图片),在左半区上方水平居中
+                    // logo 在左半区上方水平居中
                     TitleLogo()
 
-                    // logo 下方留空隙,按钮往下移(比之前小,按钮往上挪一点)
-                    Box(modifier = Modifier.height(36))
-
-                    // 按钮列,上下紧凑无间隔
+                    // 按钮列占据 logo 以下的剩余空间并垂直居中(即上移居中)
                     Column(
-                        modifier = Modifier.width(200),
+                        modifier = Modifier.weight(1f).width(200),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(0),
+                        verticalArrangement = Arrangement.Center,
                     ) {
                         MenuButton("回到游戏") {
                             onClose.close() // 关闭本菜单,回到游戏
