@@ -40,15 +40,22 @@ class LogoDrawable : Drawable {
         val guiGraphics = (canvas as? CanvasImpl)?.guiGraphics ?: return
         val location = LogoTexture.getLocation()
         val texture = Minecraft.getInstance().textureManager.getTexture(location)
+        // 保持原图比例(1024:256 = 4:1),避免被布局拉伸变形:以目标宽度定宽,高度按比例算。
+        val texW = 1024
+        val texH = 256
+        val drawW = minOf(dstRect.size.width, 512).coerceAtLeast(1)
+        val drawH = (drawW * texH / texW).coerceAtLeast(1)
+        val x0 = dstRect.offset.x.toFloat()
+        val y0 = dstRect.offset.y.toFloat()
         guiGraphics.submitElement(
             BlitState(
                 pipeline = RenderPipelines.GUI_TEXTURED,
                 textureSetup = TextureSetup.singleTexture(texture.textureView, texture.sampler),
                 pose = Matrix3x2f(guiGraphics.pose()),
-                x0 = dstRect.offset.x.toFloat(),
-                y0 = dstRect.offset.y.toFloat(),
-                x1 = (dstRect.offset.x + dstRect.size.width).toFloat(),
-                y1 = (dstRect.offset.y + dstRect.size.height).toFloat(),
+                x0 = x0,
+                y0 = y0,
+                x1 = x0 + drawW,
+                y1 = y0 + drawH,
                 u0 = 0f,
                 u1 = 1f,
                 v0 = 0f,
