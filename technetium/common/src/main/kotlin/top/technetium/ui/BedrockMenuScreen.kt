@@ -55,17 +55,17 @@ fun BedrockMenuScreen() {
                 alignment = Alignment.TopLeft,
             ) {
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(top = 6, left = 40, right = 40),
+                    modifier = Modifier.fillMaxSize().padding(top = 24, left = 40, right = 40),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     // logo 在左半区上方水平居中
                     TitleLogo()
 
-                    // 按钮列紧贴 logo 下方(顶部对齐,只留小空隙)——比"剩余空间居中"更靠上
+                    // 按钮列紧跟 logo 下方(自然从上往下排,不用 weight,整体靠上)
                     Column(
-                        modifier = Modifier.weight(1f).width(200).padding(top = 8),
+                        modifier = Modifier.width(200).padding(top = 12),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Top,
+                        verticalArrangement = Arrangement.spacedBy(0),
                     ) {
                         MenuButton("回到游戏") {
                             onClose.close() // 关闭本菜单,回到游戏
