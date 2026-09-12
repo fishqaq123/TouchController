@@ -63,7 +63,7 @@ fun BedrockMenuScreen() {
 
                     // 按钮列紧跟 logo 下方(自然从上往下排,不用 weight,整体靠上)
                     Column(
-                        modifier = Modifier.width(200).padding(top = 12),
+                        modifier = Modifier.width(200).padding(top = 0),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(0),
                     ) {
@@ -110,7 +110,7 @@ private fun TitleLogo() {
     Box(
         modifier = Modifier
             .width(512)
-            .height(128)
+            .height(80)
             .background(logo),
     )
 }
