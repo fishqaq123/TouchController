@@ -51,8 +51,15 @@ public abstract class ContainerDoubleClickExitMixin {
     @Unique
     private static final long TECHNETIUM_DOUBLE_CLICK_WINDOW_MS = 3000L;
 
-    @Inject(method = "mouseClicked(Lnet/minecraft/client/input/MouseButtonEvent;Z)Z", at = @At("HEAD"), cancellable = true)
+    // 注入到 RETURN:先让原版 + 其他模组处理完点击,再根据"是否已被处理"决定要不要走我们的逻辑。
+    // 这样其他模组(如 JEI)在面板外放的 UI 会优先消费点击,不会被我们抢。
+    @Inject(method = "mouseClicked(Lnet/minecraft/client/input/MouseButtonEvent;Z)Z", at = @At("RETURN"), cancellable = true)
     private void technetium$onMouseClicked(MouseButtonEvent event, boolean doubled, CallbackInfoReturnable<Boolean> cir) {
+        // 若本次点击已被(原版/其他模组 UI)处理 → 不干预,走它们的逻辑
+        if (Boolean.TRUE.equals(cir.getReturnValue())) {
+            return;
+        }
+
         // 只处理左键
         if (event.button() != 0) {
             return;
