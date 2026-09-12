@@ -8,6 +8,8 @@
     "client": [
         "BuiltinWidgetsPauseRedirectMixin",
         "ChatScreenProviderRedirectMixin",
-        "ChatComponentMixin"
+        "ChatComponentMixin",
+        "ContainerDoubleClickExitMixin",
+        "ContainerExitHintRendererMixin"
     ]
 }
