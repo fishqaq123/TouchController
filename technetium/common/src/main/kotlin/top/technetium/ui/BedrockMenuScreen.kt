@@ -63,7 +63,7 @@ fun BedrockMenuScreen() {
 
                     // 按钮列紧贴 logo 下方(顶部对齐,只留小空隙)——比"剩余空间居中"更靠上
                     Column(
-                        modifier = Modifier.weight(1f).width(200).padding(top = 12),
+                        modifier = Modifier.weight(1f).width(200).padding(top = 8),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Top,
                     ) {
