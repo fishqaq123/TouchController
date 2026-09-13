@@ -59,7 +59,7 @@ public abstract class ContainerExitHintRendererMixin {
         int centerX = (int) ContainerExitHint.getX();
         int centerY = (int) ContainerExitHint.getY();
 
-        // 先不旋转/缩放,直接以鼠标位置为左上角画白字(验证渲染通路)
-        graphics.text(font, text, centerX, centerY, 0xFFFFFF, true);
+        // 颜色用 ARGB(0xAARRGGBB):之前传 0xFFFFFF alpha=0 全透明→看不见!
+        graphics.text(font, text, centerX, centerY, 0xFFFFFFFF, true);
     }
 }
