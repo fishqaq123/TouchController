@@ -34,6 +34,11 @@ public abstract class ContainerExitHintRendererMixin {
             return;
         }
 
+        // === 临时诊断日志(定位问题后删除) ===
+        System.out.println("[TC-DIAG] renderExitHint called: x=" + ContainerExitHint.getX()
+                + " y=" + ContainerExitHint.getY()
+                + " rot=" + ContainerExitHint.getRotationDeg());
+
         Minecraft client = Minecraft.getInstance();
         Font font = client.font;
         String text = "再次点击以退出";
