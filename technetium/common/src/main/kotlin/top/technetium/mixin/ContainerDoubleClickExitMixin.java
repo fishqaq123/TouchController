@@ -92,8 +92,7 @@ public abstract class ContainerDoubleClickExitMixin {
             technetium$lastClickTime = 0L;
             ContainerExitHint.hide();
             // 切到「透明守护层」接住这次点击(避免穿透到世界开箱子),该层约 0.08 秒后自己关闭。
-            net.minecraft.client.Minecraft client = net.minecraft.client.Minecraft.getInstance();
-            client.setScreen(new top.technetium.ui.TransparentGuardScreen(client, client.font));
+            ContainerExitHint.openGuardScreen();
             cir.setReturnValue(true);
         } else {
             // 第一次点击 → 记录 + 在鼠标处显示提示
