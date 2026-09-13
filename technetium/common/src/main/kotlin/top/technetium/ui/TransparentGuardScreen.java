@@ -5,6 +5,8 @@
 
 package top.technetium.ui;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -20,8 +22,9 @@ public class TransparentGuardScreen extends Screen {
     /** 已存在的 tick 数;20 tick/秒 → 2 tick ≈ 0.1s(接近 0.08s)。 */
     private int technetium$ticks = 0;
 
-    public TransparentGuardScreen() {
-        super(Component.literal(""));
+    /** 26.2 的 Screen 构造器为 (Minecraft, Font, Component)。 */
+    public TransparentGuardScreen(Minecraft client, Font font) {
+        super(client, font, Component.literal(""));
     }
 
     /** 不加任何控件,保持透明。 */
