@@ -23,15 +23,6 @@ import top.technetium.ui.ContainerExitHint;
  */
 @Mixin(AbstractContainerScreen.class)
 public abstract class ContainerExitHintRendererMixin {
-    /** 诊断日志(slf4j,会写进 latest.log)。 */
-    @org.spongepowered.asm.mixin.Unique
-    private static final org.slf4j.Logger TECHNETIUM_LOGGER =
-            org.slf4j.LoggerFactory.getLogger("Technetium");
-
-    /** 只打一次,确认挂载点是否被调用。 */
-    @org.spongepowered.asm.mixin.Unique
-    private static boolean technetium$renderLoggedOnce = false;
-
     @Inject(
             method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V",
             at = @At("TAIL")
@@ -39,19 +30,9 @@ public abstract class ContainerExitHintRendererMixin {
     private void technetium$renderExitHint(
             GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci
     ) {
-        // === 临时诊断日志:确认渲染注入点已被调用(只打一次) ===
-        if (!technetium$renderLoggedOnce) {
-            technetium$renderLoggedOnce = true;
-            TECHNETIUM_LOGGER.info("[TC-DIAG] renderExitState hook reached (once), self={}", this.getClass().getName());
-        }
-
         if (!ContainerExitHint.isVisible()) {
             return;
         }
-
-        // === 临时诊断日志:提示应显示时的参数 ===
-        TECHNETIUM_LOGGER.info("[TC-DIAG] renderExitHint visible: x={} y={} rot={}",
-                ContainerExitHint.getX(), ContainerExitHint.getY(), ContainerExitHint.getRotationDeg());
 
         Minecraft client = Minecraft.getInstance();
         Font font = client.font;
