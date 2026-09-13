@@ -36,6 +36,11 @@ public final class ContainerExitHint {
         suppressExpireAt = System.currentTimeMillis() + 500L;
     }
 
+    /** 只读查询:当前标志是否置位(不消费,用于诊断)。 */
+    public static boolean peekSuppress() {
+        return suppressNextClick && System.currentTimeMillis() <= suppressExpireAt;
+    }
+
     /** 是否应抑制这次左键事件(会消费/清除标志)。 */
     public static boolean consumeSuppressClick() {
         if (!suppressNextClick) {
