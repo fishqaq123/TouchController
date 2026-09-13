@@ -21,13 +21,21 @@ import top.technetium.ui.ContainerExitHint;
  */
 @Mixin(MouseHandler.class)
 public abstract class SuppressNextClickMixin {
+    /** 诊断日志(定位后移除)。 */
+    @org.spongepowered.asm.mixin.Unique
+    private static final org.slf4j.Logger TECHNETIUM_LOGGER =
+            org.slf4j.LoggerFactory.getLogger("Technetium");
+
     @Inject(method = "onButton(JLnet/minecraft/client/input/MouseButtonInfo;I)V", at = @At("HEAD"), cancellable = true)
     private void technetium$suppressClick(long window, MouseButtonInfo buttonInfo, int action, CallbackInfo ci) {
+        TECHNETIUM_LOGGER.info("[TC-SDIAG] onButton btn={} action={} suppress={}",
+                buttonInfo.button(), action, ContainerExitHint.peekSuppress());
         // 只抑制左键
         if (buttonInfo.button() != 0) {
             return;
         }
         if (ContainerExitHint.consumeSuppressClick()) {
+            TECHNETIUM_LOGGER.info("[TC-SDIAG] suppressed left click (action={})", action);
             ci.cancel();
         }
     }
