@@ -91,8 +91,8 @@ public abstract class ContainerDoubleClickExitMixin {
             // 该层约 0.08 秒后自己关闭回游戏。
             technetium$lastClickTime = 0L;
             ContainerExitHint.hide();
-            net.minecraft.client.Minecraft client = net.minecraft.client.Minecraft.getInstance();
-            client.setScreen(new top.technetium.ui.TransparentGuardScreen(client, client.font));
+            // 临时:先不引用 TransparentGuardScreen,让 javac 单独暴露它自身的编译错误。
+            ((AbstractContainerScreen<?>) (Object) this).onClose();
             cir.setReturnValue(true);
         } else {
             // 第一次点击 → 记录 + 在鼠标处显示提示
