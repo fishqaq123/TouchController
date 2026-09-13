@@ -101,7 +101,8 @@ public final class ContainerExitHint {
      */
     public static void openGuardScreen() {
         net.minecraft.client.Minecraft client = net.minecraft.client.Minecraft.getInstance();
-        client.setScreen(new GuardScreen(client, client.font));
+        // 26.2 里设置当前界面的方法是 setScreenAndShow(不是 setScreen)。
+        client.setScreenAndShow(new GuardScreen(client, client.font));
     }
 
     /** 透明守护层:不画内容(能看见下面的世界),接住点击,2 tick(≈0.1s)后自己关闭。 */
