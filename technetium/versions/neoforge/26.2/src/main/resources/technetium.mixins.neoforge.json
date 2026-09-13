@@ -10,6 +10,7 @@
         "ChatScreenProviderRedirectMixin",
         "ChatComponentMixin",
         "ContainerDoubleClickExitMixin",
-        "ContainerExitHintRendererMixin"
+        "ContainerExitHintRendererMixin",
+        "SuppressNextClickMixin"
     ]
 }
