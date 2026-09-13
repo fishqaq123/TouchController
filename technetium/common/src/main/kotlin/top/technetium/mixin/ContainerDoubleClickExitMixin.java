@@ -114,9 +114,10 @@ public abstract class ContainerDoubleClickExitMixin {
     private boolean technetium$isSupportedContainer() {
         Object self = this;
         String name = self.getClass().getName();
-        // 箱子/陷阱箱/潜影盒/木桶 → ContainerScreen;工作台 → CraftingScreen;背包 → InventoryScreen;
-        // 铁砧 → AnvilScreen;锻造台 → SmithingScreen;村民交易 → MerchantScreen
+        // 箱子/陷阱箱/木桶 → ContainerScreen;潜影盒 → ShulkerBoxScreen;工作台 → CraftingScreen;
+        // 背包 → InventoryScreen;铁砧 → AnvilScreen;锻造台 → SmithingScreen;村民交易 → MerchantScreen
         return name.endsWith("ContainerScreen")
+                || name.endsWith("ShulkerBoxScreen")
                 || name.endsWith("CraftingScreen")
                 || name.endsWith("InventoryScreen")
                 || name.endsWith("AnvilScreen")
