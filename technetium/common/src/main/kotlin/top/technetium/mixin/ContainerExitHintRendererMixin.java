@@ -41,16 +41,10 @@ public abstract class ContainerExitHintRendererMixin {
         int textWidth = font.width(text);
         int textHeight = font.lineHeight;
 
-        float centerX = (float) ContainerExitHint.getX();
-        float centerY = (float) ContainerExitHint.getY();
-        float rotationRad = (float) Math.toRadians(ContainerExitHint.getRotationDeg());
+        int centerX = (int) ContainerExitHint.getX();
+        int centerY = (int) ContainerExitHint.getY();
 
-        var pose = graphics.pose();
-        pose.pushMatrix();
-        pose.translate(centerX, centerY);
-        pose.rotate(rotationRad);
-        pose.scale(0.75f, 0.75f);  // 字体小
-        graphics.text(font, text, -textWidth / 2, -textHeight / 2, 0xFFFFFF, true);
-        pose.popMatrix();
+        // 先不旋转/缩放,直接以鼠标位置为左上角画白字(验证渲染通路)
+        graphics.text(font, text, centerX, centerY, 0xFFFFFF, true);
     }
 }
