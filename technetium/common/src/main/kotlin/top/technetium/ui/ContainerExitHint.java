@@ -93,4 +93,52 @@ public final class ContainerExitHint {
     public static float getRotationDeg() {
         return rotationDeg;
     }
+
+    /**
+     * 切到「透明守护层」:接住退出容器时的那次点击(避免穿透到世界又打开箱子),约 0.08 秒后自动关闭。
+     *
+     * 守护层写成本类的静态内部类(同一编译单元),避免跨文件编译顺序问题。
+     */
+    public static void openGuardScreen() {
+        net.minecraft.client.Minecraft client = net.minecraft.client.Minecraft.getInstance();
+        client.setScreen(new GuardScreen(client, client.font));
+    }
+
+    /** 透明守护层:不画内容(能看见下面的世界),接住点击,2 tick(≈0.1s)后自己关闭。 */
+    public static class GuardScreen extends net.minecraft.client.gui.screens.Screen {
+        private int technetium$ticks = 0;
+
+        /** 26.2 的 Screen 构造器为 (Minecraft, Font, Component)。 */
+        public GuardScreen(
+                net.minecraft.client.Minecraft client,
+                net.minecraft.client.gui.Font font) {
+            super(client, font, net.minecraft.network.chat.Component.literal(""));
+        }
+
+        @Override
+        protected void init() {
+            // 不加任何控件,保持透明
+        }
+
+        @Override
+        public boolean mouseClicked(
+                net.minecraft.client.input.MouseButtonEvent event, boolean doubled) {
+            // 接住点击,不让它传给世界
+            return true;
+        }
+
+        @Override
+        public void tick() {
+            super.tick();
+            technetium$ticks++;
+            if (technetium$ticks >= 2) {
+                this.onClose();
+            }
+        }
+
+        @Override
+        public boolean isPauseScreen() {
+            return false;
+        }
+    }
 }
