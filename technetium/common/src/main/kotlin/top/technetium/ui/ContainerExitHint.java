@@ -22,7 +22,31 @@ public final class ContainerExitHint {
     /** 随机旋转角度(度,约 -15 或 +15)。 */
     private static float rotationDeg = 0f;
 
+    /** 是否要抑制紧接着的一次鼠标左键事件(退出容器后,避免点到世界里的箱子)。 */
+    private static boolean suppressNextClick = false;
+    /** 抑制的过期时间(避免标志长期残留)。 */
+    private static long suppressExpireAt = 0L;
+
     private ContainerExitHint() {
+    }
+
+    /** 标记:抑制紧接着的一次左键(退出容器后调用)。 */
+    public static void suppressNextClick() {
+        suppressNextClick = true;
+        suppressExpireAt = System.currentTimeMillis() + 500L;
+    }
+
+    /** 是否应抑制这次左键事件(会消费/清除标志)。 */
+    public static boolean consumeSuppressClick() {
+        if (!suppressNextClick) {
+            return false;
+        }
+        if (System.currentTimeMillis() > suppressExpireAt) {
+            suppressNextClick = false;
+            return false;
+        }
+        suppressNextClick = false;
+        return true;
     }
 
     /** 在指定位置显示提示(随机左/右旋转约 15°,3 秒后过期)。 */
