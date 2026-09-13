@@ -87,9 +87,10 @@ public abstract class ContainerDoubleClickExitMixin {
         boolean nearSameSpot = dx <= 40 && dy <= 40;
 
         if (withinWindow && nearSameSpot) {
-            // 双击成功 → 关闭容器
+            // 双击成功 → 关闭容器,并抑制紧接着的左键(否则会点到世界里的箱子)
             technetium$lastClickTime = 0L;
             ContainerExitHint.hide();
+            ContainerExitHint.suppressNextClick();
             ((AbstractContainerScreen<?>) (Object) this).onClose();
             cir.setReturnValue(true);
         } else {
