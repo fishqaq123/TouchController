@@ -55,6 +55,13 @@ public abstract class ContainerDoubleClickExitMixin {
     // 面板内(含 slot、按钮)一律不拦截 → 原版与其他模组 UI 正常处理。
     @Inject(method = "mouseClicked(Lnet/minecraft/client/input/MouseButtonEvent;Z)Z", at = @At("HEAD"), cancellable = true)
     private void technetium$onMouseClicked(MouseButtonEvent event, boolean doubled, CallbackInfoReturnable<Boolean> cir) {
+        // === 临时诊断日志(定位问题后删除) ===
+        System.out.println("[TC-DIAG] mouseClicked hit: btn=" + event.button()
+                + " x=" + event.x() + " y=" + event.y()
+                + " panel=(" + leftPos + "," + topPos + "," + imageWidth + "," + imageHeight + ")"
+                + " carriedEmpty=" + menu.getCarried().isEmpty()
+                + " self=" + this.getClass().getName());
+
         // 只处理左键
         if (event.button() != 0) {
             return;
