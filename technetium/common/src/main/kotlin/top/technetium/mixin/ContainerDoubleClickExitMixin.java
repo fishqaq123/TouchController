@@ -87,14 +87,12 @@ public abstract class ContainerDoubleClickExitMixin {
         boolean nearSameSpot = dx <= 40 && dy <= 40;
 
         if (withinWindow && nearSameSpot) {
-            // 双击成功 → 关闭容器,并抑制紧接着的左键(否则会点到世界里的箱子)
+            // 双击成功 → 不直接关容器,而是切到「透明守护层」接住这次点击(避免穿透到世界开箱子),
+            // 该层约 0.08 秒后自己关闭回游戏。
             technetium$lastClickTime = 0L;
             ContainerExitHint.hide();
-            ContainerExitHint.suppressNextClick();
-            org.slf4j.LoggerFactory.getLogger("Technetium")
-                    .info("[TC-SDIAG] exit triggered, suppressNextClick called -> peek={}",
-                            ContainerExitHint.peekSuppress());
-            ((AbstractContainerScreen<?>) (Object) this).onClose();
+            net.minecraft.client.Minecraft.getInstance()
+                    .setScreen(new top.technetium.ui.TransparentGuardScreen());
             cir.setReturnValue(true);
         } else {
             // 第一次点击 → 记录 + 在鼠标处显示提示
