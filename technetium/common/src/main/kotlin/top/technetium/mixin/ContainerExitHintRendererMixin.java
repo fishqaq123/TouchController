@@ -23,6 +23,15 @@ import top.technetium.ui.ContainerExitHint;
  */
 @Mixin(AbstractContainerScreen.class)
 public abstract class ContainerExitHintRendererMixin {
+    /** 诊断日志(定位后移除)。 */
+    @org.spongepowered.asm.mixin.Unique
+    private static final org.slf4j.Logger TECHNETIUM_LOGGER =
+            org.slf4j.LoggerFactory.getLogger("Technetium");
+
+    /** 只打一次,确认注入点被调用。 */
+    @org.spongepowered.asm.mixin.Unique
+    private static boolean technetium$loggedOnce = false;
+
     @Inject(
             method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V",
             at = @At("TAIL")
@@ -30,9 +39,15 @@ public abstract class ContainerExitHintRendererMixin {
     private void technetium$renderExitHint(
             GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci
     ) {
+        if (!technetium$loggedOnce) {
+            technetium$loggedOnce = true;
+            TECHNETIUM_LOGGER.info("[TC-RDIAG] extractRenderState hook reached, self={}", this.getClass().getName());
+        }
         if (!ContainerExitHint.isVisible()) {
             return;
         }
+        TECHNETIUM_LOGGER.info("[TC-RDIAG] hint visible, drawing at x={} y={}",
+                ContainerExitHint.getX(), ContainerExitHint.getY());
 
         Minecraft client = Minecraft.getInstance();
         Font font = client.font;
