@@ -34,11 +34,6 @@ import top.technetium.ui.ContainerExitHint;
  */
 @Mixin(AbstractContainerScreen.class)
 public abstract class ContainerDoubleClickExitMixin {
-    /** 诊断日志(slf4j,会写进 latest.log)。 */
-    @Unique
-    private static final org.slf4j.Logger TECHNETIUM_LOGGER =
-            org.slf4j.LoggerFactory.getLogger("Technetium");
-
     @Shadow protected int leftPos;
     @Shadow protected int topPos;
     @Shadow protected int imageWidth;
@@ -60,12 +55,6 @@ public abstract class ContainerDoubleClickExitMixin {
     // 面板内(含 slot、按钮)一律不拦截 → 原版与其他模组 UI 正常处理。
     @Inject(method = "mouseClicked(Lnet/minecraft/client/input/MouseButtonEvent;Z)Z", at = @At("HEAD"), cancellable = true)
     private void technetium$onMouseClicked(MouseButtonEvent event, boolean doubled, CallbackInfoReturnable<Boolean> cir) {
-        // === 临时诊断日志(定位问题后删除) ===
-        TECHNETIUM_LOGGER.info("[TC-DIAG] mouseClicked hit: btn={} x={} y={} panel=({},{},{},{}) carriedEmpty={} self={}",
-                event.button(), event.x(), event.y(),
-                leftPos, topPos, imageWidth, imageHeight,
-                menu.getCarried().isEmpty(), this.getClass().getName());
-
         // 只处理左键
         if (event.button() != 0) {
             return;
