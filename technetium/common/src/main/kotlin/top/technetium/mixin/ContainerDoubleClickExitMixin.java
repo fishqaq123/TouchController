@@ -91,6 +91,9 @@ public abstract class ContainerDoubleClickExitMixin {
             technetium$lastClickTime = 0L;
             ContainerExitHint.hide();
             ContainerExitHint.suppressNextClick();
+            org.slf4j.LoggerFactory.getLogger("Technetium")
+                    .info("[TC-SDIAG] exit triggered, suppressNextClick called -> peek={}",
+                            ContainerExitHint.peekSuppress());
             ((AbstractContainerScreen<?>) (Object) this).onClose();
             cir.setReturnValue(true);
         } else {
